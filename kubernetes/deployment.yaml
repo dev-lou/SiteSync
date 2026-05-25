@@ -1,0 +1,165 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: sitesync-web
+  namespace: sitesync
+  labels:
+    app: sitesync-web
+data:
+  NODE_ENV: 'production'
+  BETTER_AUTH_URL: 'https://sitesync.example.com'
+  CONVEX_URL: 'https://your-project.convex.cloud'
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sitesync-web
+  namespace: sitesync
+  labels:
+    app: sitesync-web
+    version: v1
+    managed-by: argo-cd
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: sitesync-web
+  template:
+    metadata:
+      labels:
+        app: sitesync-web
+        version: v1
+    spec:
+      serviceAccountName: sitesync-web
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1001
+        runAsGroup: 1001
+        fsGroup: 1001
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: web
+          image: ghcr.io/your-org/sitesync-pro:latest
+          ports:
+            - containerPort: 3000
+              name: http
+              protocol: TCP
+          envFrom:
+            - configMapRef:
+                name: sitesync-web
+          env:
+            - name: BETTER_AUTH_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: better-auth
+                  key: secret
+            - name: CONVEX_URL
+              valueFrom:
+                secretKeyRef:
+                  name: convex
+                  key: url
+          resources:
+            requests:
+              cpu: '100m'
+              memory: '128Mi'
+            limits:
+              cpu: '500m'
+              memory: '256Mi'
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: ['ALL']
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            runAsUser: 1001
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 3000
+              scheme: HTTP
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 3
+            successThreshold: 1
+            failureThreshold: 3
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 3000
+              scheme: HTTP
+            initialDelaySeconds: 15
+            periodSeconds: 20
+            timeoutSeconds: 5
+            successThreshold: 1
+            failureThreshold: 5
+          startupProbe:
+            httpGet:
+              path: /health
+              port: 3000
+              scheme: HTTP
+            initialDelaySeconds: 3
+            periodSeconds: 5
+            failureThreshold: 30
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+      volumes:
+        - name: tmp
+          emptyDir:
+            sizeLimit: 100Mi
+      # Spread pods across nodes for HA
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: DoNotSchedule
+          labelSelector:
+            matchLabels:
+              app: sitesync-web
+      # Graceful shutdown
+      terminationGracePeriodSeconds: 30
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sitesync-web
+  namespace: sitesync
+  labels:
+    app: sitesync-web
+spec:
+  selector:
+    app: sitesync-web
+  ports:
+    - port: 80
+      targetPort: 3000
+      name: http
+      protocol: TCP
+  type: ClusterIP
+  sessionAffinity: None
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: sitesync-web
+  namespace: sitesync
+  annotations:
+    traefik.ingress.kubernetes.io/router.entrypoints: websecure
+    traefik.ingress.kubernetes.io/router.tls: 'true'
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    kubernetes.io/ingress.class: traefik
+spec:
+  tls:
+    - hosts:
+        - sitesync.example.com
+      secretName: sitesync-web-tls
+  rules:
+    - host: sitesync.example.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: sitesync-web
+                port:
+                  name: http

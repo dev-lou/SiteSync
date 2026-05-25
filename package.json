@@ -1,0 +1,24 @@
+{
+  "name": "sitesync-pro",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Real-time construction project management platform",
+  "scripts": {
+    "dev": "pnpm --filter @sitesync/sveltekit dev",
+    "build": "pnpm --filter @sitesync/sveltekit build",
+    "build:widgets": "pnpm -r --filter @sitesync/delivery-tracker --filter @sitesync/inspection-form --filter @sitesync/blueprint-viewer --filter @sitesync/safety-heatmap --filter @sitesync/kanban-board build",
+    "build:all": "pnpm build:widgets && pnpm build",
+    "preview": "pnpm --filter @sitesync/sveltekit preview",
+    "lint": "pnpm --filter @sitesync/sveltekit lint",
+    "check": "pnpm --filter @sitesync/sveltekit check",
+    "test": "pnpm --filter @sitesync/design-tokens test",
+    "format": "prettier --write ."
+  },
+  "engines": {
+    "node": ">=22.0.0",
+    "pnpm": ">=9.0.0"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": ["esbuild"]
+  }
+}

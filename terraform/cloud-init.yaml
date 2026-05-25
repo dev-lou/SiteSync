@@ -1,0 +1,36 @@
+#cloud-config
+package_update: true
+package_upgrade: true
+
+packages:
+  - curl
+  - ca-certificates
+  - apt-transport-https
+  - gnupg
+  - lsb-release
+
+runcmd:
+  # Install K3s (lightweight Kubernetes)
+  - curl -sfL https://get.k3s.io | sh -
+
+  # Wait for K3s to be ready
+  - until kubectl get nodes | grep -q Ready; do sleep 5; done
+
+  # Install ArgoCD
+  - kubectl create namespace argocd || true
+  - kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+
+  # Wait for ArgoCD pods
+  - kubectl wait --namespace argocd --for=condition=ready pod --all --timeout=300s
+
+  # Create namespace for Sitesync
+  - kubectl create namespace sitesync || true
+
+  # Apply Sitesync manifests directly (ArgoCD will manage from here)
+  - kubectl apply -n argocd -f https://raw.githubusercontent.com/${github_repo}/main/kubernetes/argocd-application.yaml
+
+  # Install Prometheus Stack
+  - kubectl create namespace monitoring || true
+  - helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+  - helm repo update
+  - helm install prometheus prometheus-community/kube-prometheus-stack -n monitoring

@@ -1,0 +1,66 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: sitesync-web
+  namespace: monitoring
+  labels:
+    app: sitesync-web
+    release: prometheus
+spec:
+  groups:
+    - name: sitesync-web
+      interval: 30s
+      rules:
+        - alert: SiteSyncWebDown
+          expr: absent(up{job='sitesync'}) == 1
+          for: 1m
+          labels:
+            severity: critical
+          annotations:
+            summary: 'SiteSync web app is down'
+            description: 'The SiteSync web application has been unreachable for over 1 minute.'
+
+        - alert: SiteSyncHighErrorRate
+          expr: rate(http_requests_total{job='sitesync', status=~'5..'}[5m]) > 0.05
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            summary: 'High error rate on SiteSync'
+            description: 'Error rate is {{ $value | humanizePercentage }} over the last 5 minutes.'
+
+        - alert: SiteSyncHighResponseTime
+          expr: histogram_quantile(0.95, rate(http_request_duration_seconds_bucket{job='sitesync'}[5m])) > 2
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            summary: 'High response time on SiteSync'
+            description: 'P95 response time is {{ $value }}s over the last 5 minutes.'
+
+        - alert: SiteSyncExpiringPermits
+          expr: sitesync_expiring_permits > 5
+          for: 1h
+          labels:
+            severity: info
+          annotations:
+            summary: 'Multiple permits expiring soon'
+            description: '{{ $value }} permits are expiring within the next 24 hours.'
+
+        - alert: SiteSyncOpenTasksHigh
+          expr: sitesync_open_tasks > 50
+          for: 24h
+          labels:
+            severity: info
+          annotations:
+            summary: 'High number of open tasks'
+            description: 'There are {{ $value }} open tasks across all projects.'
+
+        - alert: SiteSyncDeliveryDelays
+          expr: sitesync_delivery_delay_hours_bucket{le='48'} - sitesync_delivery_delay_hours_bucket{le='24'} > 3
+          for: 2h
+          labels:
+            severity: warning
+          annotations:
+            summary: 'Multiple deliveries delayed beyond 24 hours'
+            description: '{{ $value }} deliveries are delayed beyond 24 hours.'

@@ -1,0 +1,10 @@
+node_modules/
+dist/
+build/
+.svelte-kit/
+.env
+.env.local
+convex/_generated/
+*.tsbuildinfo
+.DS_Store
+nul

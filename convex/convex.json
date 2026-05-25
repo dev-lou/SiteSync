@@ -1,0 +1,13 @@
+{
+  "project": "sitesync-pro",
+  "team": "sitesync",
+  "prodUrl": "",
+  "functions": "convex/",
+  "authInfo": [
+    {
+      "domain": "",
+      "applicationID": "",
+      "type": "customJwt"
+    }
+  ]
+}

@@ -1,0 +1,37 @@
+{
+  "name": "SiteSync Pro",
+  "short_name": "SiteSync",
+  "description": "Construction project management platform — manage deliveries, inspections, blueprints, safety permits, and tasks in real time.",
+  "start_url": "/app",
+  "display": "standalone",
+  "display_override": ["window-controls-overlay", "standalone"],
+  "background_color": "#ffffff",
+  "theme_color": "#3b82f6",
+  "orientation": "portrait-primary",
+  "categories": ["productivity", "construction", "business"],
+  "lang": "en-US",
+  "icons": [
+    { "src": "/favicon.png", "sizes": "48x48", "type": "image/png" },
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ],
+  "screenshots": [
+    {
+      "src": "/screenshot-desktop.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "SiteSync Pro Dashboard"
+    },
+    {
+      "src": "/screenshot-mobile.png",
+      "sizes": "390x844",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "SiteSync Pro Mobile View"
+    }
+  ],
+  "edge_side_panel": {
+    "preferred_width": 480
+  }
+}

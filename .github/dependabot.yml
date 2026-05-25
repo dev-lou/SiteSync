@@ -1,0 +1,100 @@
+version: 2
+updates:
+  # Root workspace — no direct deps, just suppress noise
+  - package-ecosystem: 'npm'
+    directory: '/'
+    schedule:
+      interval: 'weekly'
+      day: 'monday'
+    open-pull-requests-limit: 0
+
+  # SvelteKit app
+  - package-ecosystem: 'npm'
+    directory: '/apps/sveltekit'
+    schedule:
+      interval: 'weekly'
+      day: 'monday'
+    open-pull-requests-limit: 5
+    labels:
+      - 'dependencies'
+      - 'sveltekit'
+
+  # Convex backend
+  - package-ecosystem: 'npm'
+    directory: '/convex'
+    schedule:
+      interval: 'weekly'
+      day: 'monday'
+    open-pull-requests-limit: 5
+    labels:
+      - 'dependencies'
+      - 'convex'
+
+  # Vue widgets
+  - package-ecosystem: 'npm'
+    directory: '/widgets/delivery-tracker'
+    schedule:
+      interval: 'weekly'
+      day: 'monday'
+    open-pull-requests-limit: 3
+    labels:
+      - 'dependencies'
+      - 'widgets'
+  - package-ecosystem: 'npm'
+    directory: '/widgets/inspection-form'
+    schedule:
+      interval: 'weekly'
+      day: 'monday'
+    open-pull-requests-limit: 3
+    labels:
+      - 'dependencies'
+      - 'widgets'
+  - package-ecosystem: 'npm'
+    directory: '/widgets/blueprint-viewer'
+    schedule:
+      interval: 'weekly'
+      day: 'monday'
+    open-pull-requests-limit: 3
+    labels:
+      - 'dependencies'
+      - 'widgets'
+  - package-ecosystem: 'npm'
+    directory: '/widgets/safety-heatmap'
+    schedule:
+      interval: 'weekly'
+      day: 'monday'
+    open-pull-requests-limit: 3
+    labels:
+      - 'dependencies'
+      - 'widgets'
+  - package-ecosystem: 'npm'
+    directory: '/widgets/kanban-board'
+    schedule:
+      interval: 'weekly'
+      day: 'monday'
+    open-pull-requests-limit: 3
+    labels:
+      - 'dependencies'
+      - 'widgets'
+
+  # Docker
+  - package-ecosystem: 'docker'
+    directory: '/'
+    schedule:
+      interval: 'weekly'
+      day: 'monday'
+    labels:
+      - 'dependencies'
+      - 'docker'
+    open-pull-requests-limit: 3
+
+  # GitHub Actions
+  - package-ecosystem: 'github-actions'
+    directory: '/'
+    schedule:
+      interval: 'weekly'
+      day: 'monday'
+    labels:
+      - 'dependencies'
+      - 'ci'
+    open-pull-requests-limit: 5

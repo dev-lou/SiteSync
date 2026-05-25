@@ -1,0 +1,52 @@
+# Git
+.git/
+.gitignore
+.gitattributes
+
+# Dependencies
+node_modules/
+pnpm-lock.yaml
+.pnpm-store/
+
+# Build outputs
+dist/
+build/
+.svelte-kit/
+
+# Environment
+.env
+.env.local
+.env.production
+.env.*.local
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Docker
+Dockerfile
+.dockerignore
+docker-compose*.yml
+
+# Terraform
+terraform/
+*.tfstate
+*.tfstate.backup
+
+# Testing
+coverage/
+.nyc_output/
+
+# Logs
+*.log
+npm-debug.log*
+
+# Temp
+tmp/
+temp/
