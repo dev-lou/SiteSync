@@ -34,10 +34,14 @@
     >
       {tab.label}
       {#if tab.count !== undefined}
-        <span class={cn(
-          'inline-flex h-5 min-w-5 items-center justify-center rounded-full px-1.5 text-xs',
-          activeTab === tab.id ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground',
-        )}>
+        <span
+          class={cn(
+            'inline-flex h-5 min-w-5 items-center justify-center rounded-full px-1.5 text-xs',
+            activeTab === tab.id
+              ? 'bg-primary text-primary-foreground'
+              : 'bg-muted text-muted-foreground',
+          )}
+        >
           {tab.count}
         </span>
       {/if}

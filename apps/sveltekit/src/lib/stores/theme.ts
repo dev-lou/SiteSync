@@ -3,15 +3,20 @@ import { writable } from 'svelte/store';
 export type Theme = 'light' | 'dark' | 'system';
 
 function createThemeStore() {
-  const stored = (typeof localStorage !== 'undefined' ? localStorage.getItem('theme') : null) as Theme | null;
+  const stored = (
+    typeof localStorage !== 'undefined' ? localStorage.getItem('theme') : null
+  ) as Theme | null;
   const initial: Theme = stored ?? 'system';
 
   const { subscribe, set, update } = writable<Theme>(initial);
 
   function applyTheme(theme: Theme) {
-    const resolved = theme === 'system'
-      ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
-      : theme;
+    const resolved =
+      theme === 'system'
+        ? window.matchMedia('(prefers-color-scheme: dark)').matches
+          ? 'dark'
+          : 'light'
+        : theme;
 
     document.documentElement.classList.toggle('dark', resolved === 'dark');
 

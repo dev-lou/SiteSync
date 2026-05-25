@@ -32,7 +32,11 @@
     <label for={inputId} class="text-sm font-medium text-foreground">{label}</label>
   {/if}
   <input
-    {type} {placeholder} {value} {oninput} {id}
+    {type}
+    {placeholder}
+    {value}
+    {oninput}
+    {id}
     class={cn(
       'focus-ring flex h-9 w-full rounded-md border bg-background px-3 py-2 text-sm text-foreground',
       'placeholder:text-muted-foreground file:border-0 file:bg-transparent file:text-sm file:font-medium',

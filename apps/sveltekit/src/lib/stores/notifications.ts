@@ -1,7 +1,13 @@
 import { writable, derived, type Readable } from 'svelte/store';
 import { getConvexClient } from './convex';
 
-export type NotificationType = 'delivery' | 'inspection' | 'permit' | 'blueprint' | 'task' | 'system';
+export type NotificationType =
+  | 'delivery'
+  | 'inspection'
+  | 'permit'
+  | 'blueprint'
+  | 'task'
+  | 'system';
 
 export type NotificationSeverity = 'info' | 'warning' | 'error' | 'success';
 
@@ -91,10 +97,7 @@ function createNotificationStore() {
       const id = `notif-${Math.random().toString(36).slice(2, 9)}`;
       update((s) => ({
         ...s,
-        items: [
-          { ...notification, id, createdAt: Date.now(), read: false },
-          ...s.items,
-        ],
+        items: [{ ...notification, id, createdAt: Date.now(), read: false }, ...s.items],
         unreadCount: s.unreadCount + 1,
       }));
     },

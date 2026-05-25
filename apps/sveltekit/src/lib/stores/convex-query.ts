@@ -10,7 +10,10 @@ export interface QueryState<T> {
   error: string | null;
 }
 
-const queryCache = new Map<string, { store: writable<QueryState<unknown>>; unsubscribe: (() => void) | null }>();
+const queryCache = new Map<
+  string,
+  { store: writable<QueryState<unknown>>; unsubscribe: (() => void) | null }
+>();
 
 export function useConvexQuery<T = unknown>(
   queryName: string,
@@ -44,7 +47,10 @@ export function useConvexQuery<T = unknown>(
 
   const originalSubscribe = store.subscribe;
   const wrappedStore = {
-    subscribe: (run: (value: QueryState<T>) => void, invalidate?: (value?: QueryState<T>) => void) => {
+    subscribe: (
+      run: (value: QueryState<T>) => void,
+      invalidate?: (value?: QueryState<T>) => void,
+    ) => {
       const unsub = originalSubscribe(run, invalidate);
       return () => {
         unsub();

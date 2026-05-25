@@ -51,8 +51,12 @@
     return last.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
   });
 </script>
+
 <header
-  class={cn('flex h-14 items-center justify-between border-b border-border bg-background px-4 sm:px-6', className)}
+  class={cn(
+    'flex h-14 items-center justify-between border-b border-border bg-background px-4 sm:px-6',
+    className,
+  )}
   {...rest}
 >
   <div class="flex items-center gap-3">
@@ -116,4 +120,3 @@
     {/if}
   </div>
 </header>
-

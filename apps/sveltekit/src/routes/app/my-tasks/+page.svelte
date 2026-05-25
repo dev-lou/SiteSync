@@ -14,7 +14,7 @@
   const projectId = $derived($page.data.user?.projectId || '');
 
   const myTasksQuery = $derived(
-    userId && projectId ? useConvexQuery('kanban:getMyTasks', { userId, projectId }) : null
+    userId && projectId ? useConvexQuery('kanban:getMyTasks', { userId, projectId }) : null,
   );
 
   const tasks = $derived(myTasksQuery?.data || []);
@@ -37,7 +37,7 @@
       <h1 class="text-2xl font-bold tracking-tight">My Tasks</h1>
       <p class="mt-1 text-sm text-muted-foreground">Tasks assigned to you, updated in real time</p>
     </div>
-    <Button onclick={() => showCreateModal = true}>
+    <Button onclick={() => (showCreateModal = true)}>
       <span>New Task</span>
     </Button>
   </div>
@@ -51,17 +51,24 @@
   {:else if tasks.length === 0}
     <Card padding="lg">
       <div class="flex flex-col items-center justify-center py-8">
-        <div class="flex h-12 w-12 items-center justify-center rounded-full bg-muted text-muted-foreground">
+        <div
+          class="flex h-12 w-12 items-center justify-center rounded-full bg-muted text-muted-foreground"
+        >
           <KanbanSquare class="h-6 w-6" />
         </div>
         <p class="mt-3 text-sm font-medium">No tasks assigned to you yet</p>
-        <p class="text-sm text-muted-foreground">Tasks will appear here when someone assigns them to you on a Kanban board.</p>
+        <p class="text-sm text-muted-foreground">
+          Tasks will appear here when someone assigns them to you on a Kanban board.
+        </p>
       </div>
     </Card>
   {:else}
     <div class="space-y-2">
       {#each tasks as task}
-        <div class="rounded-md border border-border border-l-4 p-4" style="border-left-color: {priorityColors[task.priority] || '#9ca3af'}">
+        <div
+          class="rounded-md border border-border border-l-4 p-4"
+          style="border-left-color: {priorityColors[task.priority] || '#9ca3af'}"
+        >
           <div class="flex items-start justify-between">
             <div>
               <p class="text-sm font-medium">{task.title}</p>
@@ -86,7 +93,9 @@
   <!-- Kanban Board Widget -->
   <Card padding="lg">
     <div class="flex items-center gap-3 mb-3">
-      <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-muted text-muted-foreground">
+      <div
+        class="flex h-10 w-10 items-center justify-center rounded-lg bg-muted text-muted-foreground"
+      >
         <KanbanSquare class="h-5 w-5" />
       </div>
       <div>
@@ -109,18 +118,20 @@
   <div class="space-y-4">
     <Input label="Title" bind:value={newTask.title} placeholder="What needs to be done?" />
     <Input label="Description" bind:value={newTask.description} placeholder="Optional details..." />
-    <Button onclick={async () => {
-      const { mutation } = await import('$utils/convex-types');
-      await mutation('kanban:createCard', {
-        boardId: projectId,
-        title: newTask.title,
-        description: newTask.description,
-        assigneeId: userId,
-        priority: 'medium',
-      });
-      showCreateModal = false;
-      newTask = { title: '', description: '' };
-    }}>
+    <Button
+      onclick={async () => {
+        const { mutation } = await import('$utils/convex-types');
+        await mutation('kanban:createCard', {
+          boardId: projectId,
+          title: newTask.title,
+          description: newTask.description,
+          assigneeId: userId,
+          priority: 'medium',
+        });
+        showCreateModal = false;
+        newTask = { title: '', description: '' };
+      }}
+    >
       Create Task
     </Button>
   </div>

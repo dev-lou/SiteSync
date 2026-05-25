@@ -7,30 +7,28 @@
   import Skeleton from '$ui/Skeleton.svelte';
   import Select from '$ui/Select.svelte';
   import { useConvexQuery } from '$stores/convex-query';
-  import {
-    BarChart3, TrendingUp, Download, FileText, RefreshCw, Calendar,
-  } from '@lucide/svelte';
+  import { BarChart3, TrendingUp, Download, FileText, RefreshCw, Calendar } from '@lucide/svelte';
 
   const projectId = $derived($page.data.user?.projectId || '');
 
   const deliveryCounts = $derived(
-    projectId ? useConvexQuery('deliveries:getDeliveryCounts', { projectId }) : null
+    projectId ? useConvexQuery('deliveries:getDeliveryCounts', { projectId }) : null,
   );
   const inspectionCounts = $derived(
-    projectId ? useConvexQuery('inspections:getCounts', { projectId }) : null
+    projectId ? useConvexQuery('inspections:getCounts', { projectId }) : null,
   );
   const permitStats = $derived(
-    projectId ? useConvexQuery('permits:getPermitStats', { projectId }) : null
+    projectId ? useConvexQuery('permits:getPermitStats', { projectId }) : null,
   );
 
   const deliveries = $derived(
-    projectId ? useConvexQuery('deliveries:listByProject', { projectId }) : null
+    projectId ? useConvexQuery('deliveries:listByProject', { projectId }) : null,
   );
   const inspections = $derived(
-    projectId ? useConvexQuery('inspections:listByProject', { projectId }) : null
+    projectId ? useConvexQuery('inspections:listByProject', { projectId }) : null,
   );
   const permits = $derived(
-    projectId ? useConvexQuery('permits:listByProject', { projectId }) : null
+    projectId ? useConvexQuery('permits:listByProject', { projectId }) : null,
   );
 
   let chartCanvas = $state<HTMLCanvasElement | null>(null);
@@ -102,60 +100,65 @@
   onMount(() => {
     if (!chartCanvas) return;
 
-    import('chart.js').then(({ Chart, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend }) => {
-      Chart.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
+    import('chart.js').then(
+      ({ Chart, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend }) => {
+        Chart.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
-      chartInstance = new Chart(chartCanvas!, {
-        type: 'bar',
-        data: {
-          labels: ['Deliveries', 'Inspections', 'Permits'],
-          datasets: [
-            {
-              label: 'Active',
-              data: [
-                (deliveryCounts?.data as Record<string, unknown>)?.active || 0,
-                (inspectionCounts?.data as Record<string, unknown>)?.pending || 0,
-                (permitStats?.data as Record<string, unknown>)?.active || 0,
-              ],
-              backgroundColor: '#22c55e',
-            },
-            {
-              label: 'Expiring / Overdue',
-              data: [
-                (deliveryCounts?.data as Record<string, unknown>)?.expiringSoon || 0,
-                (inspectionCounts?.data as Record<string, unknown>)?.overdue || 0,
-                (permitStats?.data as Record<string, unknown>)?.expiringSoon || 0,
-              ],
-              backgroundColor: '#f59e0b',
-            },
-            {
-              label: 'Completed',
-              data: [
-                (deliveryCounts?.data as Record<string, unknown>)?.received || 0,
-                (inspectionCounts?.data as Record<string, unknown>)?.passed || 0,
-                Object.keys(permitStats?.data || {}).length > 0 ? 0 : 0,
-              ],
-              backgroundColor: '#3b82f6',
-            },
-          ],
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
-            legend: { position: 'bottom' },
-            title: { display: true, text: 'Project Overview', font: { size: 16 } },
+        chartInstance = new Chart(chartCanvas!, {
+          type: 'bar',
+          data: {
+            labels: ['Deliveries', 'Inspections', 'Permits'],
+            datasets: [
+              {
+                label: 'Active',
+                data: [
+                  (deliveryCounts?.data as Record<string, unknown>)?.active || 0,
+                  (inspectionCounts?.data as Record<string, unknown>)?.pending || 0,
+                  (permitStats?.data as Record<string, unknown>)?.active || 0,
+                ],
+                backgroundColor: '#22c55e',
+              },
+              {
+                label: 'Expiring / Overdue',
+                data: [
+                  (deliveryCounts?.data as Record<string, unknown>)?.expiringSoon || 0,
+                  (inspectionCounts?.data as Record<string, unknown>)?.overdue || 0,
+                  (permitStats?.data as Record<string, unknown>)?.expiringSoon || 0,
+                ],
+                backgroundColor: '#f59e0b',
+              },
+              {
+                label: 'Completed',
+                data: [
+                  (deliveryCounts?.data as Record<string, unknown>)?.received || 0,
+                  (inspectionCounts?.data as Record<string, unknown>)?.passed || 0,
+                  Object.keys(permitStats?.data || {}).length > 0 ? 0 : 0,
+                ],
+                backgroundColor: '#3b82f6',
+              },
+            ],
           },
-          scales: {
-            y: { beginAtZero: true, grid: { color: 'oklch(0.9 0.01 260)' } },
-            x: { grid: { display: false } },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { position: 'bottom' },
+              title: { display: true, text: 'Project Overview', font: { size: 16 } },
+            },
+            scales: {
+              y: { beginAtZero: true, grid: { color: 'oklch(0.9 0.01 260)' } },
+              x: { grid: { display: false } },
+            },
           },
-        },
-      });
-    });
+        });
+      },
+    );
 
     return () => {
-      if (chartInstance && typeof (chartInstance as Record<string, unknown>).destroy === 'function') {
+      if (
+        chartInstance &&
+        typeof (chartInstance as Record<string, unknown>).destroy === 'function'
+      ) {
         (chartInstance as { destroy: () => void }).destroy();
       }
     };
@@ -168,13 +171,15 @@
   <div class="flex items-center justify-between flex-wrap gap-4">
     <div>
       <h1 class="text-2xl font-bold tracking-tight">Reports & Analytics</h1>
-      <p class="mt-1 text-sm text-muted-foreground">Project-wide metrics, trends, and exportable data</p>
+      <p class="mt-1 text-sm text-muted-foreground">
+        Project-wide metrics, trends, and exportable data
+      </p>
     </div>
     <div class="flex items-center gap-3">
       <Select
         options={periodOptions}
         value={selectedPeriod}
-        onchange={(val: string) => selectedPeriod = val}
+        onchange={(val: string) => (selectedPeriod = val)}
       />
       <Button variant="outline">
         <Download class="h-4 w-4" />
@@ -186,39 +191,62 @@
   <!-- KPI Summary Cards -->
   <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
     <Card padding="md">
-      <p class="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Active Deliveries</p>
+      <p class="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+        Active Deliveries
+      </p>
       {#if deliveryCounts?.loading}
         <Skeleton class="mt-2 h-7 w-12" />
       {:else}
-        <p class="mt-1 text-2xl font-bold">{(deliveryCounts?.data as Record<string, unknown>)?.active || 0}</p>
+        <p class="mt-1 text-2xl font-bold">
+          {(deliveryCounts?.data as Record<string, unknown>)?.active || 0}
+        </p>
       {/if}
-      <p class="mt-1 text-xs text-muted-foreground">{(deliveryCounts?.data as Record<string, unknown>)?.received || 0} received</p>
+      <p class="mt-1 text-xs text-muted-foreground">
+        {(deliveryCounts?.data as Record<string, unknown>)?.received || 0} received
+      </p>
     </Card>
 
     <Card padding="md">
-      <p class="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Pending Inspections</p>
+      <p class="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+        Pending Inspections
+      </p>
       {#if inspectionCounts?.loading}
         <Skeleton class="mt-2 h-7 w-12" />
       {:else}
-        <p class="mt-1 text-2xl font-bold">{(inspectionCounts?.data as Record<string, unknown>)?.pending || 0}</p>
+        <p class="mt-1 text-2xl font-bold">
+          {(inspectionCounts?.data as Record<string, unknown>)?.pending || 0}
+        </p>
       {/if}
-      <p class="mt-1 text-xs text-muted-foreground">{(inspectionCounts?.data as Record<string, unknown>)?.passed || 0} passed</p>
+      <p class="mt-1 text-xs text-muted-foreground">
+        {(inspectionCounts?.data as Record<string, unknown>)?.passed || 0} passed
+      </p>
     </Card>
 
     <Card padding="md">
-      <p class="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Active Permits</p>
+      <p class="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+        Active Permits
+      </p>
       {#if permitStats?.loading}
         <Skeleton class="mt-2 h-7 w-12" />
       {:else}
-        <p class="mt-1 text-2xl font-bold">{(permitStats?.data as Record<string, unknown>)?.active || 0}</p>
+        <p class="mt-1 text-2xl font-bold">
+          {(permitStats?.data as Record<string, unknown>)?.active || 0}
+        </p>
       {/if}
-      <p class="mt-1 text-xs text-muted-foreground">{(permitStats?.data as Record<string, unknown>)?.expiringSoon || 0} expiring</p>
+      <p class="mt-1 text-xs text-muted-foreground">
+        {(permitStats?.data as Record<string, unknown>)?.expiringSoon || 0} expiring
+      </p>
     </Card>
 
     <Card padding="md">
-      <p class="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Total Items</p>        <p class="mt-1 text-2xl font-bold">
-          {((deliveries?.data as Array<unknown>)?.length || 0) + ((inspections?.data as Array<unknown>)?.length || 0) + ((permits?.data as Array<unknown>)?.length || 0)}
-        </p>
+      <p class="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+        Total Items
+      </p>
+      <p class="mt-1 text-2xl font-bold">
+        {((deliveries?.data as Array<unknown>)?.length || 0) +
+          ((inspections?.data as Array<unknown>)?.length || 0) +
+          ((permits?.data as Array<unknown>)?.length || 0)}
+      </p>
       <p class="mt-1 text-xs text-muted-foreground">Across all modules</p>
     </Card>
   </div>
@@ -227,7 +255,9 @@
   <div class="grid grid-cols-1 gap-4 lg:grid-cols-2">
     <Card padding="lg">
       <div class="flex items-center gap-3 mb-3">
-        <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary">
+        <div
+          class="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary"
+        >
           <BarChart3 class="h-5 w-5" />
         </div>
         <div>
@@ -248,7 +278,9 @@
 
     <div class="space-y-4">
       <Card padding="md">
-        <h3 class="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Deliveries by Status</h3>
+        <h3 class="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+          Deliveries by Status
+        </h3>
         {#if deliveryStatuses.length === 0}
           <p class="text-sm text-muted-foreground">No data</p>
         {:else}
@@ -256,7 +288,10 @@
             {#each deliveryStatuses as item}
               <div class="flex items-center justify-between">
                 <div class="flex items-center gap-2">
-                  <span class="h-2.5 w-2.5 rounded-full" style="background: {statusColor(item.status)}" />
+                  <span
+                    class="h-2.5 w-2.5 rounded-full"
+                    style="background: {statusColor(item.status)}"
+                  />
                   <span class="text-sm">{statusLabel(item.status)}</span>
                 </div>
                 <Badge variant="outline">{item.count}</Badge>
@@ -267,7 +302,9 @@
       </Card>
 
       <Card padding="md">
-        <h3 class="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Inspections by Status</h3>
+        <h3 class="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+          Inspections by Status
+        </h3>
         {#if inspectionStatuses.length === 0}
           <p class="text-sm text-muted-foreground">No data</p>
         {:else}
@@ -275,7 +312,10 @@
             {#each inspectionStatuses as item}
               <div class="flex items-center justify-between">
                 <div class="flex items-center gap-2">
-                  <span class="h-2.5 w-2.5 rounded-full" style="background: {statusColor(item.status)}" />
+                  <span
+                    class="h-2.5 w-2.5 rounded-full"
+                    style="background: {statusColor(item.status)}"
+                  />
                   <span class="text-sm">{statusLabel(item.status)}</span>
                 </div>
                 <Badge variant="outline">{item.count}</Badge>
@@ -290,7 +330,9 @@
   <!-- Permit Type Breakdown + Export -->
   <div class="grid grid-cols-1 gap-4 lg:grid-cols-2">
     <Card padding="md">
-      <h3 class="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Permits by Type</h3>
+      <h3 class="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+        Permits by Type
+      </h3>
       {#if permitByType.length === 0}
         <p class="text-sm text-muted-foreground">No permits yet</p>
       {:else}
@@ -307,7 +349,9 @@
 
     <Card padding="md">
       <div class="flex items-center gap-3">
-        <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary">
+        <div
+          class="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary"
+        >
           <FileText class="h-5 w-5" />
         </div>
         <div>

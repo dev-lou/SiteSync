@@ -7,9 +7,7 @@
   import Badge from '$ui/Badge.svelte';
   import Avatar from '$ui/Avatar.svelte';
   import Toast from '$ui/Toast.svelte';
-  import {
-    User, Bell, Palette, Sun, Moon, Save,
-  } from '@lucide/svelte';
+  import { User, Bell, Palette, Sun, Moon, Save } from '@lucide/svelte';
 
   const user = $derived($page.data.user);
 
@@ -55,7 +53,9 @@
 <div class="mx-auto max-w-3xl space-y-6">
   <div>
     <h1 class="text-2xl font-bold tracking-tight">Settings</h1>
-    <p class="mt-1 text-sm text-muted-foreground">Manage your account and application preferences</p>
+    <p class="mt-1 text-sm text-muted-foreground">
+      Manage your account and application preferences
+    </p>
   </div>
 
   <Card padding="lg">
@@ -101,7 +101,9 @@
 
     <div class="flex items-center justify-between rounded-md border border-border p-4">
       <div class="flex items-center gap-3">
-        <div class="flex h-9 w-9 items-center justify-center rounded-md bg-muted text-muted-foreground">
+        <div
+          class="flex h-9 w-9 items-center justify-center rounded-md bg-muted text-muted-foreground"
+        >
           {#if $theme === 'dark'}
             <Moon class="h-4 w-4" />
           {:else}
@@ -110,7 +112,9 @@
         </div>
         <div>
           <p class="text-sm font-medium">Theme</p>
-          <p class="text-xs text-muted-foreground">Currently: {$theme === 'dark' ? 'Dark Mode' : 'Light Mode'}</p>
+          <p class="text-xs text-muted-foreground">
+            Currently: {$theme === 'dark' ? 'Dark Mode' : 'Light Mode'}
+          </p>
         </div>
       </div>
       <Button variant="outline" onclick={() => theme.toggle()}>
@@ -132,19 +136,37 @@
 
     <div class="space-y-3">
       {#each notificationItems as item, i}
-        <label class="flex items-center justify-between rounded-md border border-border p-3 hover:bg-muted/50 cursor-pointer transition-colors">
+        <label
+          class="flex items-center justify-between rounded-md border border-border p-3 hover:bg-muted/50 cursor-pointer transition-colors"
+        >
           <div>
             <p class="text-sm font-medium">{item.label}</p>
             <p class="text-xs text-muted-foreground">{item.desc}</p>
           </div>
           {#if i === 0}
-            <input type="checkbox" bind:checked={notifyDeliveries} class="h-4 w-4 rounded border-border text-primary focus:ring-primary" />
+            <input
+              type="checkbox"
+              bind:checked={notifyDeliveries}
+              class="h-4 w-4 rounded border-border text-primary focus:ring-primary"
+            />
           {:else if i === 1}
-            <input type="checkbox" bind:checked={notifyInspections} class="h-4 w-4 rounded border-border text-primary focus:ring-primary" />
+            <input
+              type="checkbox"
+              bind:checked={notifyInspections}
+              class="h-4 w-4 rounded border-border text-primary focus:ring-primary"
+            />
           {:else if i === 2}
-            <input type="checkbox" bind:checked={notifyPermits} class="h-4 w-4 rounded border-border text-primary focus:ring-primary" />
+            <input
+              type="checkbox"
+              bind:checked={notifyPermits}
+              class="h-4 w-4 rounded border-border text-primary focus:ring-primary"
+            />
           {:else}
-            <input type="checkbox" bind:checked={notifyTasks} class="h-4 w-4 rounded border-border text-primary focus:ring-primary" />
+            <input
+              type="checkbox"
+              bind:checked={notifyTasks}
+              class="h-4 w-4 rounded border-border text-primary focus:ring-primary"
+            />
           {/if}
         </label>
       {/each}
@@ -152,9 +174,7 @@
   </Card>
 
   <div class="flex gap-3">
-    <Button variant="outline" onclick={resetSettings}>
-      Reset to Defaults
-    </Button>
+    <Button variant="outline" onclick={resetSettings}>Reset to Defaults</Button>
   </div>
 </div>
 

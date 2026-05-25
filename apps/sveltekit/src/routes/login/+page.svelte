@@ -26,16 +26,30 @@
 
   <Card padding="xl" class="w-full max-w-sm">
     <div class="mb-6 text-center">
-      <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-primary text-primary-foreground text-lg font-bold">
+      <div
+        class="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-primary text-primary-foreground text-lg font-bold"
+      >
         SP
       </div>
       <h1 class="mt-4 text-xl font-bold tracking-tight">SiteSync Pro</h1>
       <p class="mt-1 text-sm text-muted-foreground">Sign in to your account</p>
     </div>
 
-    <form onsubmit={(e) => { e.preventDefault(); loading = true; }} class="space-y-4">
-      <Input label="Email address" type="email" placeholder="you@example.com" bind:value={email} required />
-      <Button class="w-full" loading={loading}>
+    <form
+      onsubmit={(e) => {
+        e.preventDefault();
+        loading = true;
+      }}
+      class="space-y-4"
+    >
+      <Input
+        label="Email address"
+        type="email"
+        placeholder="you@example.com"
+        bind:value={email}
+        required
+      />
+      <Button class="w-full" {loading}>
         <Mail class="h-4 w-4" />
         <span>Send Magic Link</span>
       </Button>

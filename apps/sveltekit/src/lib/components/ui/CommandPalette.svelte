@@ -123,7 +123,9 @@
         autocomplete="off"
         spellcheck="false"
       />
-      <kbd class="hidden rounded-md border border-border px-1.5 py-0.5 text-[10px] text-muted-foreground sm:inline-block">
+      <kbd
+        class="hidden rounded-md border border-border px-1.5 py-0.5 text-[10px] text-muted-foreground sm:inline-block"
+      >
         ESC
       </kbd>
     </div>
@@ -138,14 +140,16 @@
       {:else}
         {#each grouped as [group, groupItems]}
           <div>
-            <p class="px-2 pb-1 pt-3 text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">
+            <p
+              class="px-2 pb-1 pt-3 text-[10px] font-semibold uppercase tracking-widest text-muted-foreground"
+            >
               {group}
             </p>
             {#each groupItems as cmd, i}
               {@const globalIndex = filtered.indexOf(cmd)}
               <button
                 onclick={() => executeCommand(globalIndex)}
-                onmouseenter={() => selectedIndex = globalIndex}
+                onmouseenter={() => (selectedIndex = globalIndex)}
                 class={cn(
                   'flex w-full items-center gap-3 rounded-md px-3 py-2.5 text-left text-sm transition-colors',
                   globalIndex === selectedIndex
@@ -163,7 +167,9 @@
                   {/if}
                 </div>
                 {#if cmd.shortcut}
-                  <kbd class="shrink-0 rounded-md border border-border px-1.5 py-0.5 text-[10px] text-muted-foreground">
+                  <kbd
+                    class="shrink-0 rounded-md border border-border px-1.5 py-0.5 text-[10px] text-muted-foreground"
+                  >
                     {cmd.shortcut}
                   </kbd>
                 {/if}

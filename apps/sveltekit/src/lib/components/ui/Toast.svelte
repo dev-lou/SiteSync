@@ -5,10 +5,14 @@
 
   function toastIcon(type: ToastType['type']) {
     switch (type) {
-      case 'success': return CheckCircle2;
-      case 'error': return AlertCircle;
-      case 'warning': return AlertTriangle;
-      case 'info': return Info;
+      case 'success':
+        return CheckCircle2;
+      case 'error':
+        return AlertCircle;
+      case 'warning':
+        return AlertTriangle;
+      case 'info':
+        return Info;
     }
   }
 </script>
@@ -46,7 +50,13 @@
 
 <style>
   @keyframes slideIn {
-    from { transform: translateX(100%); opacity: 0; }
-    to { transform: translateX(0); opacity: 1; }
+    from {
+      transform: translateX(100%);
+      opacity: 0;
+    }
+    to {
+      transform: translateX(0);
+      opacity: 1;
+    }
   }
 </style>

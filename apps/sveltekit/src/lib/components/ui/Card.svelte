@@ -22,7 +22,8 @@
   class={cn(
     'rounded-lg border bg-background text-foreground shadow-sm',
     {
-      'hover:shadow-md hover:border-primary/30 transition-all duration-200 cursor-pointer': variant === 'interactive',
+      'hover:shadow-md hover:border-primary/30 transition-all duration-200 cursor-pointer':
+        variant === 'interactive',
     },
     {
       'p-0': padding === 'none',

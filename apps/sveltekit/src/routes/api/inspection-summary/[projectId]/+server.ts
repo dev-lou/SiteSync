@@ -37,7 +37,11 @@ async function generateInspectionPdf(projectId: string, dateStr: string): Promis
 
   let y = height - 50;
 
-  function addText(text: string, size: number, opts: { bold?: boolean; color?: [number, number, number] } = {}) {
+  function addText(
+    text: string,
+    size: number,
+    opts: { bold?: boolean; color?: [number, number, number] } = {},
+  ) {
     page.drawText(text, {
       x: 50,
       y,

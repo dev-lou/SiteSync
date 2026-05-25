@@ -9,18 +9,18 @@
   const projectId = $derived($page.data.user?.projectId || '');
 
   const deliveryCounts = $derived(
-    projectId ? useConvexQuery('deliveries:getDeliveryCounts', { projectId }) : null
+    projectId ? useConvexQuery('deliveries:getDeliveryCounts', { projectId }) : null,
   );
   const inspectionCounts = $derived(
-    projectId ? useConvexQuery('inspections:getCounts', { projectId }) : null
+    projectId ? useConvexQuery('inspections:getCounts', { projectId }) : null,
   );
   const permitStats = $derived(
-    projectId ? useConvexQuery('permits:getPermitStats', { projectId }) : null
+    projectId ? useConvexQuery('permits:getPermitStats', { projectId }) : null,
   );
   const myTasks = $derived(
     $page.data.user?.id
       ? useConvexQuery('kanban:getMyTasks', { userId: $page.data.user.id, projectId })
-      : null
+      : null,
   );
 </script>
 
@@ -33,7 +33,9 @@
     <a href="/app/deliveries">
       <Card variant="interactive" padding="lg">
         <div class="flex items-start justify-between">
-          <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary">
+          <div
+            class="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary"
+          >
             <Package class="h-5 w-5" />
           </div>
           {#if deliveryCounts?.loading}
@@ -58,7 +60,9 @@
     <a href="/app/inspections">
       <Card variant="interactive" padding="lg">
         <div class="flex items-start justify-between">
-          <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary">
+          <div
+            class="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary"
+          >
             <ClipboardCheck class="h-5 w-5" />
           </div>
           {#if inspectionCounts?.loading}
@@ -81,7 +85,9 @@
     <div>
       <Card variant="interactive" padding="lg">
         <div class="flex items-start justify-between">
-          <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary">
+          <div
+            class="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary"
+          >
             <FileText class="h-5 w-5" />
           </div>
           <Badge variant="outline">Review</Badge>
@@ -94,7 +100,9 @@
     <a href="/app/safety">
       <Card variant="interactive" padding="lg">
         <div class="flex items-start justify-between">
-          <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary">
+          <div
+            class="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary"
+          >
             <ShieldAlert class="h-5 w-5" />
           </div>
           {#if permitStats?.loading}
@@ -117,7 +125,9 @@
     <a href="/app/my-tasks">
       <Card variant="interactive" padding="lg">
         <div class="flex items-start justify-between">
-          <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary">
+          <div
+            class="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary"
+          >
             <KanbanSquare class="h-5 w-5" />
           </div>
           {#if myTasks?.loading}
