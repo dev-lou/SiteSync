@@ -14,7 +14,7 @@
     "@sitesync/convex-vue-client": "workspace:*"
   },
   "devDependencies": {
-    "@vitejs/plugin-vue": "^5.0.0",
+    "@vitejs/plugin-vue": "^6.0.7",
     "vite": "^6.3.0"
   }
 }
