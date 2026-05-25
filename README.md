@@ -5,7 +5,7 @@
 
 # SiteSync Pro — Real-Time Construction Project Management
 
-[![CI/CD](https://github.com/your-org/sitesync-pro/actions/workflows/ci.yml/badge.svg)](https://github.com/your-org/sitesync-pro/actions/workflows/ci.yml)
+[![CI/CD](https://github.com/dev-lou/SiteSync/actions/workflows/ci.yml/badge.svg)](https://github.com/dev-lou/SiteSync/actions/workflows/ci.yml)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.8-blue)](https://www.typescriptlang.org/)
 [![SvelteKit](https://img.shields.io/badge/SvelteKit-5-ff3e00)](https://kit.svelte.dev/)
 [![Vue](https://img.shields.io/badge/Vue-3-4fc08d)](https://vuejs.org/)
@@ -400,7 +400,7 @@ sitesync-pro/
 
 ```bash
 # Clone the repository
-git clone https://github.com/your-org/sitesync-pro.git
+git clone https://github.com/dev-lou/SiteSync.git
 cd sitesync-pro
 
 # Install all dependencies
