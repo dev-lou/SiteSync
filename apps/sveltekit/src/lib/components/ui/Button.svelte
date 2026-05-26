@@ -26,17 +26,19 @@
 </script>
 
 <button
-  onclick={onclick}
+  {onclick}
   disabled={disabled || loading}
   class={cn(
     'focus-ring inline-flex items-center justify-center gap-2 whitespace-nowrap font-medium transition-all duration-150',
     'disabled:pointer-events-none disabled:opacity-50 cursor-pointer select-none',
     {
-      'bg-primary text-primary-foreground hover:bg-primary/90 shadow-sm active:shadow-xs': variant === 'primary',
+      'bg-primary text-primary-foreground hover:bg-primary/90 shadow-sm active:shadow-xs':
+        variant === 'primary',
       'bg-secondary text-secondary-foreground hover:bg-secondary/80': variant === 'secondary',
       'border border-border bg-transparent hover:bg-muted': variant === 'outline',
       'bg-transparent hover:bg-muted': variant === 'ghost',
-      'bg-destructive text-destructive-foreground hover:bg-destructive/90 shadow-sm': variant === 'destructive',
+      'bg-destructive text-destructive-foreground hover:bg-destructive/90 shadow-sm':
+        variant === 'destructive',
     },
     {
       'h-7 rounded-sm px-2.5 text-xs': size === 'xs',

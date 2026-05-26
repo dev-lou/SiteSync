@@ -16,7 +16,14 @@
   }: {
     children?: import('svelte').Snippet;
     data: {
-      user: { id: string; name: string; email: string; role: UserRole; avatarUrl?: string; projectId: string };
+      user: {
+        id: string;
+        name: string;
+        email: string;
+        role: UserRole;
+        avatarUrl?: string;
+        projectId: string;
+      };
     };
   } = $props();
 
@@ -35,18 +42,11 @@
   <div class="flex flex-1 flex-col overflow-hidden">
     <Header user={data.user} />
 
-    <!-- Page content with enter animation -->
-    <main class="flex-1 overflow-y-auto pb-20 md:pb-6">
-      {#key $page.url.pathname}
-        <div
-          in:fly={{ y: 8, duration: 200, opacity: 0 }}
-          class="p-4 sm:p-6"
-        >
-          {#if children}
-            {@render children()}
-          {/if}
-        </div>
-      {/key}
+    <!-- Page content -->
+    <main class="flex-1 overflow-y-auto pb-20 md:pb-6 p-4 sm:p-6">
+      {#if children}
+        {@render children()}
+      {/if}
     </main>
   </div>
 </div>

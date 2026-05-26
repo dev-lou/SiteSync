@@ -258,6 +258,12 @@ export type QueryResult<N extends ConvexQuery> = unknown;
 
 // ── Helper functions ──
 
+function resolveName(name: string, type: 'queries' | 'mutations'): string {
+  const parts = name.split(':');
+  if (parts.length !== 2) return name;
+  return `${parts[0]}/${type}:${parts[1]}`;
+}
+
 /** Type-safe mutation caller */
 export async function mutation<N extends ConvexMutation>(
   name: N,
@@ -265,7 +271,8 @@ export async function mutation<N extends ConvexMutation>(
   client?: ConvexClient,
 ): Promise<MutationResult<N>> {
   const c = client ?? getConvexClient();
-  return c.mutation(name, args as Record<string, unknown>) as Promise<MutationResult<N>>;
+  const realName = resolveName(name as string, 'mutations');
+  return c.mutation(realName as any, args as Record<string, unknown>) as Promise<MutationResult<N>>;
 }
 
 /** Type-safe query subscription setup */
@@ -275,7 +282,8 @@ export function onQueryUpdate<N extends ConvexQuery>(
   callback: (result: QueryResult<N>) => void,
 ): () => void {
   const client = getConvexClient();
-  return client.onUpdate(name, args as Record<string, unknown>, (result: unknown) => {
+  const realName = resolveName(name as string, 'queries');
+  return client.onUpdate(realName as any, args as Record<string, unknown>, (result: unknown) => {
     callback(result as QueryResult<N>);
   });
 }

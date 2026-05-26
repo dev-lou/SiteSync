@@ -7,11 +7,13 @@
     hint = '',
     class: className = '',
     id = '',
-    value = '',
-    type = 'text' as string,
+    value = $bindable(''),
+    type = 'text',
     placeholder = '',
     oninput,
-    ...rest
+    required = false,
+    disabled = false,
+    name = '',
   }: {
     label?: string;
     error?: string;
@@ -22,9 +24,12 @@
     type?: string;
     placeholder?: string;
     oninput?: (e: Event) => void;
-  } & Record<string, unknown> = $props();
+    required?: boolean;
+    disabled?: boolean;
+    name?: string;
+  } = $props();
 
-  const inputId = id || `input-${Math.random().toString(36).slice(2, 9)}`;
+  const inputId = $derived(id || `input-${Math.random().toString(36).slice(2, 9)}`);
 </script>
 
 <div class={cn('flex flex-col gap-1.5', className)}>
@@ -32,13 +37,19 @@
     <label for={inputId} class="text-sm font-medium text-foreground">{label}</label>
   {/if}
   <input
-    {type} {placeholder} {value} {oninput} {id}
+    {type}
+    {placeholder}
+    bind:value
+    {oninput}
+    id={inputId}
+    {required}
+    {disabled}
+    {name}
     class={cn(
       'focus-ring flex h-9 w-full rounded-md border bg-background px-3 py-2 text-sm text-foreground',
       'placeholder:text-muted-foreground file:border-0 file:bg-transparent file:text-sm file:font-medium',
       !error ? 'border-input' : 'border-danger',
     )}
-    {...rest}
   />
   {#if error}
     <p class="text-xs text-danger">{error}</p>

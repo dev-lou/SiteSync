@@ -1,13 +1,6 @@
 {
   "project": "sitesync-pro",
   "team": "sitesync",
-  "prodUrl": "",
-  "functions": "convex/",
-  "authInfo": [
-    {
-      "domain": "",
-      "applicationID": "",
-      "type": "customJwt"
-    }
-  ]
+  "prodUrl": "https://veracious-spider-797.convex.cloud",
+  "functions": "."
 }

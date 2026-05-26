@@ -26,10 +26,10 @@
 
 <div
   class={cn('relative inline-flex', className)}
-  onmouseenter={() => visible = true}
-  onmouseleave={() => visible = false}
-  onfocusin={() => visible = true}
-  onfocusout={() => visible = false}
+  onmouseenter={() => (visible = true)}
+  onmouseleave={() => (visible = false)}
+  onfocusin={() => (visible = true)}
+  onfocusout={() => (visible = false)}
   {...rest}
 >
   {#if children}

@@ -28,7 +28,9 @@
 <div class="delivery-tracker-widget">
   {#if loading}
     <div class="flex items-center justify-center py-12">
-      <div class="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent"></div>
+      <div
+        class="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent"
+      ></div>
     </div>
   {:else if error}
     <div class="rounded-md border border-danger/20 bg-danger/5 p-4 text-sm text-danger">

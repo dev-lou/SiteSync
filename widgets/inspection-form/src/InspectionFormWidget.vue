@@ -54,11 +54,11 @@ onUnmounted(() => {
 });
 
 // Reactive query subscription for real-time sync
-const { data: inspection, isLoading, error } = useConvexQuery(
-  props.client,
-  'inspections:getById',
-  { inspectionId: props.inspectionId },
-);
+const {
+  data: inspection,
+  isLoading,
+  error,
+} = useConvexQuery(props.client, 'inspections:getById', { inspectionId: props.inspectionId });
 
 const checklist = computed(() => (inspection.value as Inspection)?.checklist || []);
 const auditTrail = computed(() => (inspection.value as Inspection)?.auditTrail || []);
@@ -74,15 +74,17 @@ const progress = computed(() => {
   return Math.round((completed / items.length) * 100);
 });
 
-const canStart = computed(() =>
-  inspectionStatus.value === 'pending' &&
-  (props.userRole === 'field_engineer' || props.userRole === 'admin'),
+const canStart = computed(
+  () =>
+    inspectionStatus.value === 'pending' &&
+    (props.userRole === 'field_engineer' || props.userRole === 'admin'),
 );
 
-const canComplete = computed(() =>
-  inspectionStatus.value === 'in_progress' &&
-  props.userId === (inspection.value as Inspection)?.assigneeId &&
-  checklist.value.every((i) => i.passed !== undefined),
+const canComplete = computed(
+  () =>
+    inspectionStatus.value === 'in_progress' &&
+    props.userId === (inspection.value as Inspection)?.assigneeId &&
+    checklist.value.every((i) => i.passed !== undefined),
 );
 
 async function toggleItem(index: number, passed: boolean) {
@@ -185,7 +187,10 @@ function getInitials(name: string): string {
 
 function formatDate(ts: number): string {
   return new Date(ts).toLocaleString('en-US', {
-    month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit',
+    month: 'short',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
   });
 }
 </script>
@@ -198,7 +203,10 @@ function formatDate(ts: number): string {
     </div>
 
     <!-- Error state -->
-    <div v-else-if="error" class="rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-600 dark:border-red-800 dark:bg-red-900/20 dark:text-red-400">
+    <div
+      v-else-if="error"
+      class="rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-600 dark:border-red-800 dark:bg-red-900/20 dark:text-red-400"
+    >
       {{ error instanceof Error ? error.message : 'Failed to load inspection' }}
     </div>
 
@@ -208,49 +216,104 @@ function formatDate(ts: number): string {
         <div class="flex items-center justify-between">
           <div>
             <h3 class="text-lg font-semibold">{{ inspectionTitle }}</h3>
-            <p class="mt-0.5 text-xs text-muted-foreground">
+            <p class="text-muted-foreground mt-0.5 text-xs">
               Created {{ formatDate(createdAt) }}
               <span v-if="completedAt">&middot; Completed {{ formatDate(completedAt) }}</span>
             </p>
           </div>
-          <span class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium"
+          <span
+            class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium"
             :class="{
-              'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400': inspectionStatus === 'pending',
-              'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400': inspectionStatus === 'in_progress',
-              'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400': inspectionStatus === 'passed',
-              'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400': inspectionStatus === 'failed',
-              'bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400': inspectionStatus === 'remedial',
-            }">
+              'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400':
+                inspectionStatus === 'pending',
+              'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400':
+                inspectionStatus === 'in_progress',
+              'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400':
+                inspectionStatus === 'passed',
+              'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400':
+                inspectionStatus === 'failed',
+              'bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400':
+                inspectionStatus === 'remedial',
+            }"
+          >
             {{ inspectionStatus.replace('_', ' ') }}
           </span>
         </div>
 
         <!-- Progress bar -->
         <div class="mt-3">
-          <div class="flex items-center justify-between text-xs text-muted-foreground">
+          <div class="text-muted-foreground flex items-center justify-between text-xs">
             <span>{{ progress }}% complete</span>
-            <span>{{ checklist.filter(i => i.passed !== undefined).length }}/{{ checklist.length }} items</span>
+            <span
+              >{{ checklist.filter((i) => i.passed !== undefined).length }}/{{
+                checklist.length
+              }}
+              items</span
+            >
           </div>
           <div class="mt-1 h-2 rounded-full bg-gray-200 dark:bg-gray-700">
-            <div class="h-2 rounded-full bg-blue-600 transition-all duration-500" :style="{ width: progress + '%' }" />
+            <div
+              class="h-2 rounded-full bg-blue-600 transition-all duration-500"
+              :style="{ width: progress + '%' }"
+            />
           </div>
         </div>
 
         <!-- Action buttons -->
         <div class="mt-3 flex flex-wrap gap-2">
-          <button v-if="canStart" @click="startInspection"
-            class="inline-flex items-center gap-1.5 rounded-md bg-blue-600 px-3 py-1.5 text-xs font-medium text-white transition-colors hover:bg-blue-700">
-            <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 0 1 0 1.971l-11.54 6.347a1.125 1.125 0 0 1-1.667-.985V5.653Z" /></svg>
+          <button
+            v-if="canStart"
+            @click="startInspection"
+            class="inline-flex items-center gap-1.5 rounded-md bg-blue-600 px-3 py-1.5 text-xs font-medium text-white transition-colors hover:bg-blue-700"
+          >
+            <svg
+              class="h-3.5 w-3.5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="2"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 0 1 0 1.971l-11.54 6.347a1.125 1.125 0 0 1-1.667-.985V5.653Z"
+              />
+            </svg>
             Start Inspection
           </button>
-          <button v-if="canComplete" @click="showCompleteDialog = true"
-            class="inline-flex items-center gap-1.5 rounded-md bg-green-600 px-3 py-1.5 text-xs font-medium text-white transition-colors hover:bg-green-700">
-            <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" /></svg>
+          <button
+            v-if="canComplete"
+            @click="showCompleteDialog = true"
+            class="inline-flex items-center gap-1.5 rounded-md bg-green-600 px-3 py-1.5 text-xs font-medium text-white transition-colors hover:bg-green-700"
+          >
+            <svg
+              class="h-3.5 w-3.5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="2"
+              stroke="currentColor"
+            >
+              <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" />
+            </svg>
             Complete Inspection
           </button>
-          <button @click="showAuditTrail = !showAuditTrail"
-            class="inline-flex items-center gap-1.5 rounded-md border border-gray-300 px-3 py-1.5 text-xs font-medium text-gray-600 transition-colors hover:bg-gray-50 dark:border-gray-600 dark:text-gray-400 dark:hover:bg-gray-800">
-            <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" /></svg>
+          <button
+            @click="showAuditTrail = !showAuditTrail"
+            class="inline-flex items-center gap-1.5 rounded-md border border-gray-300 px-3 py-1.5 text-xs font-medium text-gray-600 transition-colors hover:bg-gray-50 dark:border-gray-600 dark:text-gray-400 dark:hover:bg-gray-800"
+          >
+            <svg
+              class="h-3.5 w-3.5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+              />
+            </svg>
             {{ showAuditTrail ? 'Hide' : 'Show' }} Audit Trail ({{ auditTrail.length }})
           </button>
         </div>
@@ -258,58 +321,106 @@ function formatDate(ts: number): string {
 
       <!-- Checklist items -->
       <div class="space-y-2">
-        <div v-for="(item, index) in checklist" :key="index"
+        <div
+          v-for="(item, index) in checklist"
+          :key="index"
           class="rounded-lg border border-gray-200 p-3 transition-all dark:border-gray-700"
-          :class="{ 'border-green-200 bg-green-50/30 dark:border-green-800 dark:bg-green-900/10': item.passed === true, 'border-red-200 bg-red-50/30 dark:border-red-800 dark:bg-red-900/10': item.passed === false }">
+          :class="{
+            'border-green-200 bg-green-50/30 dark:border-green-800 dark:bg-green-900/10':
+              item.passed === true,
+            'border-red-200 bg-red-50/30 dark:border-red-800 dark:bg-red-900/10':
+              item.passed === false,
+          }"
+        >
           <div class="flex items-start gap-3">
             <!-- Pass/Fail toggle -->
             <div class="flex shrink-0 flex-col gap-1">
-              <button @click="toggleItem(index, true)"
+              <button
+                @click="toggleItem(index, true)"
                 class="flex h-8 w-8 items-center justify-center rounded-md text-xs font-bold transition-all"
-                :class="item.passed === true
-                  ? 'bg-green-500 text-white shadow-sm'
-                  : 'bg-gray-100 text-gray-400 hover:bg-green-100 hover:text-green-600 dark:bg-gray-800 dark:hover:bg-green-900/30'">
+                :class="
+                  item.passed === true
+                    ? 'bg-green-500 text-white shadow-sm'
+                    : 'bg-gray-100 text-gray-400 hover:bg-green-100 hover:text-green-600 dark:bg-gray-800 dark:hover:bg-green-900/30'
+                "
+              >
                 ✓
               </button>
-              <button @click="toggleItem(index, false)"
+              <button
+                @click="toggleItem(index, false)"
                 class="flex h-8 w-8 items-center justify-center rounded-md text-xs font-bold transition-all"
-                :class="item.passed === false
-                  ? 'bg-red-500 text-white shadow-sm'
-                  : 'bg-gray-100 text-gray-400 hover:bg-red-100 hover:text-red-600 dark:bg-gray-800 dark:hover:bg-red-900/30'">
+                :class="
+                  item.passed === false
+                    ? 'bg-red-500 text-white shadow-sm'
+                    : 'bg-gray-100 text-gray-400 hover:bg-red-100 hover:text-red-600 dark:bg-gray-800 dark:hover:bg-red-900/30'
+                "
+              >
                 ✗
               </button>
             </div>
 
             <!-- Item content -->
             <div class="min-w-0 flex-1">
-              <p class="text-sm font-medium"
-                :class="{ 'line-through opacity-60': item.passed !== undefined }">
+              <p
+                class="text-sm font-medium"
+                :class="{ 'line-through opacity-60': item.passed !== undefined }"
+              >
                 {{ item.item }}
-                <span v-if="item.required" class="ml-1 text-xs text-red-500" title="Required">*</span>
+                <span v-if="item.required" class="ml-1 text-xs text-red-500" title="Required"
+                  >*</span
+                >
               </p>
 
               <!-- Notes field -->
-              <textarea :value="item.notes || ''"
-                @input="(e: any) => debouncedUpdateNotes(index, (e.target as HTMLTextAreaElement).value)"
+              <textarea
+                :value="item.notes || ''"
+                @input="
+                  (e: any) => debouncedUpdateNotes(index, (e.target as HTMLTextAreaElement).value)
+                "
                 placeholder="Add notes..."
-                class="mt-2 w-full resize-none rounded-md border border-gray-200 bg-white px-2.5 py-1.5 text-xs text-gray-700 placeholder-gray-400 focus:border-blue-400 focus:outline-none focus:ring-1 focus:ring-blue-400 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 dark:placeholder-gray-500"
-                rows="1" />
+                class="mt-2 w-full resize-none rounded-md border border-gray-200 bg-white px-2.5 py-1.5 text-xs text-gray-700 placeholder-gray-400 focus:border-blue-400 focus:ring-1 focus:ring-blue-400 focus:outline-none dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 dark:placeholder-gray-500"
+                rows="1"
+              />
 
               <!-- Photo thumbnails -->
-              <div v-if="item.photoIds && item.photoIds.length > 0" class="mt-2 flex flex-wrap gap-1.5">
-                <div v-for="(photoId, pIdx) in item.photoIds" :key="pIdx"
-                  class="h-12 w-12 overflow-hidden rounded-md border border-gray-200 dark:border-gray-700">
+              <div
+                v-if="item.photoIds && item.photoIds.length > 0"
+                class="mt-2 flex flex-wrap gap-1.5"
+              >
+                <div
+                  v-for="(photoId, pIdx) in item.photoIds"
+                  :key="pIdx"
+                  class="h-12 w-12 overflow-hidden rounded-md border border-gray-200 dark:border-gray-700"
+                >
                   <img :src="photoId" class="h-full w-full object-cover" alt="Inspection photo" />
                 </div>
               </div>
 
               <!-- Photo capture button -->
-              <button @click="handlePhotoCapture(index)" :disabled="photoUploading"
+              <button
+                @click="handlePhotoCapture(index)"
+                :disabled="photoUploading"
                 class="mt-2 inline-flex items-center gap-1 rounded-md border border-dashed border-gray-300 px-2 py-1 text-xs text-gray-500 transition-colors hover:border-blue-400 hover:text-blue-600 dark:border-gray-600 dark:hover:border-blue-500"
-                :class="{ 'opacity-50': photoUploading }">
-                <svg v-if="!photoUploading" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M6.827 6.175A2.31 2.31 0 0 1 5.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 0 0-1.134-.175 2.31 2.31 0 0 1-1.64-1.055l-.822-1.316a2.192 2.192 0 0 0-1.736-1.039 48.774 48.774 0 0 0-5.232 0 2.192 2.192 0 0 0-1.736 1.039l-.821 1.316Z" />
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 12.75a4.5 4.5 0 1 1-9 0 4.5 4.5 0 0 1 9 0Z" />
+                :class="{ 'opacity-50': photoUploading }"
+              >
+                <svg
+                  v-if="!photoUploading"
+                  class="h-3.5 w-3.5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M6.827 6.175A2.31 2.31 0 0 1 5.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 0 0-1.134-.175 2.31 2.31 0 0 1-1.64-1.055l-.822-1.316a2.192 2.192 0 0 0-1.736-1.039 48.774 48.774 0 0 0-5.232 0 2.192 2.192 0 0 0-1.736 1.039l-.821 1.316Z"
+                  />
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M16.5 12.75a4.5 4.5 0 1 1-9 0 4.5 4.5 0 0 1 9 0Z"
+                  />
                 </svg>
                 <span v-if="!photoUploading">Add Photo</span>
                 <span v-else>Uploading...</span>
@@ -321,62 +432,114 @@ function formatDate(ts: number): string {
 
       <!-- Audit trail -->
       <div v-if="showAuditTrail" class="mt-5">
-        <h4 class="mb-3 text-sm font-semibold text-muted-foreground">Audit Trail</h4>
+        <h4 class="text-muted-foreground mb-3 text-sm font-semibold">Audit Trail</h4>
         <div class="space-y-2">
-          <div v-for="(entry, idx) in auditTrail" :key="idx"
-            class="flex items-start gap-3 rounded-lg border border-gray-100 bg-gray-50/50 p-3 dark:border-gray-800 dark:bg-gray-900/30">
-            <div class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-primary/10 text-xs font-medium text-primary">
+          <div
+            v-for="(entry, idx) in auditTrail"
+            :key="idx"
+            class="flex items-start gap-3 rounded-lg border border-gray-100 bg-gray-50/50 p-3 dark:border-gray-800 dark:bg-gray-900/30"
+          >
+            <div
+              class="bg-primary/10 text-primary flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-xs font-medium"
+            >
               {{ getInitials(entry.userId) }}
             </div>
             <div class="min-w-0 flex-1">
               <p class="text-xs font-medium">{{ entry.action }}</p>
-              <p v-if="entry.detail" class="text-xs text-muted-foreground">{{ entry.detail }}</p>
-              <p class="mt-0.5 text-xs text-muted-foreground">{{ formatDate(entry.timestamp) }}</p>
+              <p v-if="entry.detail" class="text-muted-foreground text-xs">{{ entry.detail }}</p>
+              <p class="text-muted-foreground mt-0.5 text-xs">{{ formatDate(entry.timestamp) }}</p>
             </div>
           </div>
-          <p v-if="auditTrail.length === 0" class="text-sm text-muted-foreground">No audit entries yet.</p>
+          <p v-if="auditTrail.length === 0" class="text-muted-foreground text-sm">
+            No audit entries yet.
+          </p>
         </div>
       </div>
     </template>
 
     <!-- Complete dialog -->
-    <div v-if="showCompleteDialog"
+    <div
+      v-if="showCompleteDialog"
       class="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
-      @click.self="showCompleteDialog = false">
+      @click.self="showCompleteDialog = false"
+    >
       <div class="mx-4 w-full max-w-sm rounded-xl bg-white p-6 shadow-lg dark:bg-gray-900">
         <h3 class="text-lg font-semibold">Complete Inspection</h3>
-        <p class="mt-1 text-sm text-muted-foreground">All checklist items have been evaluated. Select the final result.</p>
+        <p class="text-muted-foreground mt-1 text-sm">
+          All checklist items have been evaluated. Select the final result.
+        </p>
 
         <div class="mt-4 space-y-2">
-          <button @click="completeStatus = 'passed'"
+          <button
+            @click="completeStatus = 'passed'"
             class="flex w-full items-center gap-3 rounded-lg border-2 p-3 text-left transition-all"
-            :class="completeStatus === 'passed' ? 'border-green-500 bg-green-50 dark:bg-green-900/20' : 'border-gray-200 dark:border-gray-700'">
-            <span class="flex h-8 w-8 items-center justify-center rounded-full bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400">✓</span>
-            <div><p class="text-sm font-medium">Passed</p><p class="text-xs text-muted-foreground">All items meet requirements</p></div>
+            :class="
+              completeStatus === 'passed'
+                ? 'border-green-500 bg-green-50 dark:bg-green-900/20'
+                : 'border-gray-200 dark:border-gray-700'
+            "
+          >
+            <span
+              class="flex h-8 w-8 items-center justify-center rounded-full bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400"
+              >✓</span
+            >
+            <div>
+              <p class="text-sm font-medium">Passed</p>
+              <p class="text-muted-foreground text-xs">All items meet requirements</p>
+            </div>
           </button>
-          <button @click="completeStatus = 'remedial'"
+          <button
+            @click="completeStatus = 'remedial'"
             class="flex w-full items-center gap-3 rounded-lg border-2 p-3 text-left transition-all"
-            :class="completeStatus === 'remedial' ? 'border-orange-500 bg-orange-50 dark:bg-orange-900/20' : 'border-gray-200 dark:border-gray-700'">
-            <span class="flex h-8 w-8 items-center justify-center rounded-full bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400">!</span>
-            <div><p class="text-sm font-medium">Remedial</p><p class="text-xs text-muted-foreground">Minor issues need correction</p></div>
+            :class="
+              completeStatus === 'remedial'
+                ? 'border-orange-500 bg-orange-50 dark:bg-orange-900/20'
+                : 'border-gray-200 dark:border-gray-700'
+            "
+          >
+            <span
+              class="flex h-8 w-8 items-center justify-center rounded-full bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400"
+              >!</span
+            >
+            <div>
+              <p class="text-sm font-medium">Remedial</p>
+              <p class="text-muted-foreground text-xs">Minor issues need correction</p>
+            </div>
           </button>
-          <button @click="completeStatus = 'failed'"
+          <button
+            @click="completeStatus = 'failed'"
             class="flex w-full items-center gap-3 rounded-lg border-2 p-3 text-left transition-all"
-            :class="completeStatus === 'failed' ? 'border-red-500 bg-red-50 dark:bg-red-900/20' : 'border-gray-200 dark:border-gray-700'">
-            <span class="flex h-8 w-8 items-center justify-center rounded-full bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400">✗</span>
-            <div><p class="text-sm font-medium">Failed</p><p class="text-xs text-muted-foreground">Critical items not met</p></div>
+            :class="
+              completeStatus === 'failed'
+                ? 'border-red-500 bg-red-50 dark:bg-red-900/20'
+                : 'border-gray-200 dark:border-gray-700'
+            "
+          >
+            <span
+              class="flex h-8 w-8 items-center justify-center rounded-full bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400"
+              >✗</span
+            >
+            <div>
+              <p class="text-sm font-medium">Failed</p>
+              <p class="text-muted-foreground text-xs">Critical items not met</p>
+            </div>
           </button>
         </div>
 
         <p v-if="submitError" class="mt-3 text-sm text-red-500">{{ submitError }}</p>
 
         <div class="mt-4 flex gap-2">
-          <button @click="showCompleteDialog = false"
-            class="flex-1 rounded-md border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-800">
+          <button
+            @click="showCompleteDialog = false"
+            class="flex-1 rounded-md border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-800"
+          >
             Cancel
           </button>
-          <button @click="completeInspection" :disabled="submitting"
-            class="flex-1 rounded-md bg-green-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-green-700 disabled:opacity-50">
+          <button
+            @click="completeInspection"
+            :disabled="submitting"
+            class="flex-1 rounded-md bg-green-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-green-700 disabled:opacity-50"
+          >
             {{ submitting ? 'Submitting...' : 'Confirm' }}
           </button>
         </div>
@@ -395,7 +558,11 @@ function formatDate(ts: number): string {
   background: linear-gradient(90deg, #1f2937 25%, #374151 50%, #1f2937 75%);
 }
 @keyframes shimmer {
-  0% { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
 }
 </style>

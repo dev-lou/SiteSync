@@ -27,7 +27,11 @@
     class?: string;
   } & Record<string, unknown> = $props();
 
+  let mounted = $state(false);
+  const isDark = $derived(mounted && $theme === 'dark');
+
   onMount(() => {
+    mounted = true;
     if (user?.id) {
       notifications.subscribeToUpdates(user.id);
     }
@@ -51,8 +55,12 @@
     return last.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
   });
 </script>
+
 <header
-  class={cn('flex h-14 items-center justify-between border-b border-border bg-background px-4 sm:px-6', className)}
+  class={cn(
+    'flex h-14 items-center justify-between border-b border-border bg-background px-4 sm:px-6',
+    className,
+  )}
   {...rest}
 >
   <div class="flex items-center gap-3">
@@ -81,17 +89,14 @@
       </button>
     </Tooltip>
 
-    <Tooltip content={$theme === 'dark' ? 'Switch to Light' : 'Switch to Dark'}>
+    <Tooltip content={isDark ? 'Switch to Light' : 'Switch to Dark'}>
       <button
         onclick={() => theme.toggle()}
         class="focus-ring flex h-8 w-8 items-center justify-center rounded-md text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
         aria-label="Toggle theme"
       >
-        {#if $theme === 'dark'}
-          <Sun class="h-4 w-4" />
-        {:else}
-          <Moon class="h-4 w-4" />
-        {/if}
+        <Sun class="h-4 w-4" style="display: {isDark ? 'block' : 'none'}" />
+        <Moon class="h-4 w-4" style="display: {isDark ? 'none' : 'block'}" />
       </button>
     </Tooltip>
 
@@ -116,4 +121,3 @@
     {/if}
   </div>
 </header>
-

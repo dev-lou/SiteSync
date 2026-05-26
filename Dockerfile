@@ -23,6 +23,8 @@ RUN pnpm install --frozen-lockfile
 FROM node:22-alpine AS builder
 WORKDIR /app
 
+RUN npm install -g pnpm@10
+
 COPY --from=deps /app/node_modules ./node_modules
 COPY --from=deps /app/pnpm-lock.yaml ./pnpm-lock.yaml
 COPY --from=deps /app/pnpm-workspace.yaml ./pnpm-workspace.yaml
@@ -41,7 +43,7 @@ RUN pnpm --filter @sitesync/kanban-board build
 RUN pnpm --filter @sitesync/sveltekit build
 
 # Prune dev dependencies for production
-RUN pnpm prune --prod
+RUN CI=true pnpm prune --prod
 
 # Stage 3: Production runner
 ARG BUILD_DATE
@@ -78,7 +80,7 @@ ENV NODE_ENV=production \
 LABEL org.opencontainers.image.title="SiteSync Pro" \
       org.opencontainers.image.description="Real-time construction management platform" \
       org.opencontainers.image.url="https://sitesync.example.com" \
-      org.opencontainers.image.source="https://github.com/your-org/sitesync-pro" \
+      org.opencontainers.image.source="https://github.com/dev-lou/SiteSync" \
       org.opencontainers.image.vendor="SiteSync" \
       org.opencontainers.image.licenses="MIT" \
       org.opencontainers.image.version="0.1.0" \

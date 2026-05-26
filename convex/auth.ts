@@ -1,11 +1,27 @@
+import { createClient } from '@convex-dev/better-auth';
+import { convex } from '@convex-dev/better-auth/plugins';
+import { components } from './_generated/api';
+import type { DataModel } from './_generated/dataModel';
 import { betterAuth } from 'better-auth';
-import { convex } from '@convex-dev/better-auth/plugins/convex';
+import authConfig from './auth.config';
+import { env } from './shared/env';
 
-export function createAuth() {
+export const authComponent = createClient<DataModel>(components.betterAuth);
+
+export function createAuth(ctx: any) {
   return betterAuth({
-    plugins: [convex()],
-    magicLink: {
+    baseURL: env('SITE_URL') || 'http://localhost:3000',
+    trustedOrigins: [
+      'http://localhost:3000',
+      'http://127.0.0.1:3000',
+      'http://localhost:5173',
+      'http://127.0.0.1:5173',
+    ],
+    database: authComponent.adapter(ctx),
+    emailAndPassword: {
       enabled: true,
+      requireEmailVerification: false,
     },
+    plugins: [convex({ authConfig })],
   });
 }

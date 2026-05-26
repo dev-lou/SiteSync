@@ -3,15 +3,15 @@ import { writable } from 'svelte/store';
 export type Theme = 'light' | 'dark' | 'system';
 
 function createThemeStore() {
-  const stored = (typeof localStorage !== 'undefined' ? localStorage.getItem('theme') : null) as Theme | null;
-  const initial: Theme = stored ?? 'system';
-
-  const { subscribe, set, update } = writable<Theme>(initial);
+  const { subscribe, set, update } = writable<Theme>('system');
 
   function applyTheme(theme: Theme) {
-    const resolved = theme === 'system'
-      ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
-      : theme;
+    const resolved =
+      theme === 'system'
+        ? window.matchMedia('(prefers-color-scheme: dark)').matches
+          ? 'dark'
+          : 'light'
+        : theme;
 
     document.documentElement.classList.toggle('dark', resolved === 'dark');
 
@@ -43,12 +43,18 @@ function createThemeStore() {
       });
     },
     init() {
+      const stored = (
+        typeof localStorage !== 'undefined' ? localStorage.getItem('theme') : null
+      ) as Theme | null;
       const current: Theme = stored ?? 'system';
       applyTheme(current);
+      set(current);
 
       if (current === 'system') {
         const mq = window.matchMedia('(prefers-color-scheme: dark)');
-        mq.addEventListener('change', () => applyTheme('system'));
+        mq.addEventListener('change', () => {
+          applyTheme('system');
+        });
       }
     },
   };

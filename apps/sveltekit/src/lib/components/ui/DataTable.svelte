@@ -76,7 +76,9 @@
 <div class={cn('space-y-3', className)} {...rest}>
   {#if searchable}
     <div class="relative">
-      <Search class="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+      <Search
+        class="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"
+      />
       <input
         type="text"
         placeholder={searchPlaceholder}
@@ -131,7 +133,10 @@
           {/each}
         {:else if sorted.length === 0}
           <tr>
-            <td colspan={columns.length} class="px-4 py-8 text-center text-sm text-muted-foreground">
+            <td
+              colspan={columns.length}
+              class="px-4 py-8 text-center text-sm text-muted-foreground"
+            >
               {emptyMessage}
             </td>
           </tr>

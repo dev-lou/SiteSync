@@ -1,6 +1,15 @@
 <script lang="ts">
   import { cn } from '$utils/cn';
-  import { Bell, CheckCheck, Package, ClipboardCheck, ShieldAlert, FileText, KanbanSquare, Info } from '@lucide/svelte';
+  import {
+    Bell,
+    CheckCheck,
+    Package,
+    ClipboardCheck,
+    ShieldAlert,
+    FileText,
+    Kanban,
+    Info,
+  } from '@lucide/svelte';
   import type { Notification, NotificationType } from '$stores/notifications';
 
   let {
@@ -34,7 +43,7 @@
     inspection: ClipboardCheck,
     permit: ShieldAlert,
     blueprint: FileText,
-    task: KanbanSquare,
+    task: Kanban,
     system: Info,
   };
 
@@ -58,18 +67,34 @@
   >
     <Bell class="h-4 w-4" />
     {#if unreadCount > 0}
-      <span class="absolute -right-0.5 -top-0.5 flex h-4 min-w-[16px] items-center justify-center rounded-full bg-destructive px-1 text-[10px] font-bold text-destructive-foreground leading-none">
+      <span
+        class="absolute -right-0.5 -top-0.5 flex h-4 min-w-[16px] items-center justify-center rounded-full bg-destructive px-1 text-[10px] font-bold text-destructive-foreground leading-none"
+      >
         {unreadCount > 99 ? '99+' : unreadCount}
       </span>
     {/if}
   </button>
 
   {#if open}
-    <!-- Backdrop -->
-    <div class="fixed inset-0 z-40" onclick={close} />
+    <!-- svelte-ignore a11y_no_static_element_interactions -->
+    <div
+      class="fixed inset-0 z-40"
+      onclick={close}
+      onkeydown={(e) => {
+        if (e.key === 'Escape') close();
+      }}
+      role="presentation"
+    ></div>
 
     <!-- Dropdown -->
-    <div class="absolute right-0 top-full z-50 mt-1 w-80 rounded-lg border border-border bg-background shadow-lg md:w-96" onclick={(e) => e.stopPropagation()}>
+    <!-- svelte-ignore a11y_no_static_element_interactions -->
+    <div
+      class="absolute right-0 top-full z-50 mt-1 w-80 rounded-lg border border-border bg-background shadow-lg md:w-96"
+      onclick={(e) => e.stopPropagation()}
+      onkeydown={(e) => {
+        if (e.key === 'Escape') close();
+      }}
+    >
       <div class="flex items-center justify-between border-b border-border px-4 py-3">
         <h3 class="text-sm font-semibold">Notifications</h3>
         {#if unreadCount > 0}
@@ -86,7 +111,9 @@
       <div class="max-h-80 overflow-y-auto">
         {#if loading}
           <div class="flex items-center justify-center py-8">
-            <div class="h-5 w-5 animate-spin rounded-full border-2 border-border border-t-primary" />
+            <div
+              class="h-5 w-5 animate-spin rounded-full border-2 border-border border-t-primary"
+            ></div>
           </div>
         {:else if notifications.length === 0}
           <div class="flex flex-col items-center py-8 text-center">
@@ -104,13 +131,18 @@
                 !notif.read && 'bg-primary/[0.03]',
               )}
             >
-              <div class={cn(
-                'mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full',
-                notif.severity === 'error' ? 'bg-destructive/10 text-destructive' :
-                notif.severity === 'warning' ? 'bg-warning/10 text-warning' :
-                notif.severity === 'success' ? 'bg-success/10 text-success' :
-                'bg-primary/10 text-primary',
-              )}>
+              <div
+                class={cn(
+                  'mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full',
+                  notif.severity === 'error'
+                    ? 'bg-destructive/10 text-destructive'
+                    : notif.severity === 'warning'
+                      ? 'bg-warning/10 text-warning'
+                      : notif.severity === 'success'
+                        ? 'bg-success/10 text-success'
+                        : 'bg-primary/10 text-primary',
+                )}
+              >
                 <Icon class="h-3.5 w-3.5" />
               </div>
               <div class="flex-1 min-w-0">
@@ -119,7 +151,7 @@
                 <p class="mt-1 text-[10px] text-muted-foreground/60">{timeAgo(notif.createdAt)}</p>
               </div>
               {#if !notif.read}
-                <span class="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-primary" />
+                <span class="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-primary"></span>
               {/if}
             </button>
           {/each}

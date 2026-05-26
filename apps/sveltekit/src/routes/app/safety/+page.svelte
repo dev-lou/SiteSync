@@ -10,16 +10,16 @@
   import Select from '$ui/Select.svelte';
   import WidgetWrapper from '$lib/components/widgets/WidgetWrapper.svelte';
   import { Plus, ShieldAlert, AlertTriangle, CheckCircle2, XCircle } from '@lucide/svelte';
-  import { useConvexQuery } from '$stores/convex-query';
+  import { useConvexQuery } from '$stores/convex-query.svelte';
 
   const projectId = $derived($page.data.user?.projectId || '');
   const userId = $derived($page.data.user?.id || '');
 
   const permitsQuery = $derived(
-    projectId ? useConvexQuery('permits:listByProject', { projectId }) : null
+    projectId ? useConvexQuery('permits:listByProject', { projectId }) : null,
   );
   const zonesQuery = $derived(
-    projectId ? useConvexQuery('permits:listZonesByProject', { projectId }) : null
+    projectId ? useConvexQuery('permits:listZonesByProject', { projectId }) : null,
   );
 
   const permits = $derived(permitsQuery?.data || []);
@@ -41,9 +41,11 @@
   <div class="flex items-center justify-between">
     <div>
       <h1 class="text-2xl font-bold tracking-tight">Safety & Permits</h1>
-      <p class="mt-1 text-sm text-muted-foreground">Zone management, permits, and compliance heatmap</p>
+      <p class="mt-1 text-sm text-muted-foreground">
+        Zone management, permits, and compliance heatmap
+      </p>
     </div>
-    <Button onclick={() => showPermitModal = true}>
+    <Button onclick={() => (showPermitModal = true)}>
       <Plus class="h-4 w-4" />
       <span>New Permit</span>
     </Button>
@@ -52,7 +54,9 @@
   <div class="grid grid-cols-1 gap-4 lg:grid-cols-2">
     <Card padding="lg">
       <div class="flex items-center gap-3 mb-3">
-        <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-muted text-muted-foreground">
+        <div
+          class="flex h-10 w-10 items-center justify-center rounded-lg bg-muted text-muted-foreground"
+        >
           <ShieldAlert class="h-5 w-5" />
         </div>
         <div>
@@ -60,23 +64,26 @@
           <p class="text-sm text-muted-foreground">SVG floor plan with zone status colors</p>
         </div>
       </div>
-      <WidgetWrapper
-        packageName="@sitesync/safety-heatmap"
-        mountFnName="mountSafetyHeatmap"
-      />
+      <WidgetWrapper packageName="@sitesync/safety-heatmap" mountFnName="mountSafetyHeatmap" />
     </Card>
 
     <Card padding="lg">
-      <h3 class="text-sm font-semibold uppercase tracking-widest text-muted-foreground">Active Permits</h3>
+      <h3 class="text-sm font-semibold uppercase tracking-widest text-muted-foreground">
+        Active Permits
+      </h3>
       <div class="mt-4 space-y-3">
         {#if loading}
           <Skeleton class="h-12 w-full" />
           <Skeleton class="h-12 w-full" />
         {:else}
-          {#each permits.filter(p => p.status === 'active' || p.status === 'expiring').slice(0, 5) as permit}
+          {#each permits
+            .filter((p: Record<string, unknown>) => p.status === 'active' || p.status === 'expiring')
+            .slice(0, 5) as permit}
             <div class="flex items-center justify-between rounded-md border border-border p-3">
               <div>
-                <p class="text-sm font-medium">{permit.type} - {permit.zoneName || permit.zoneId}</p>
+                <p class="text-sm font-medium">
+                  {permit.type} - {permit.zoneName || permit.zoneId}
+                </p>
                 <p class="text-xs text-muted-foreground">
                   {permit.status === 'expiring' ? 'Expires soon' : 'Expires ' + permit.expiresAt}
                 </p>
@@ -94,7 +101,9 @@
   </div>
 
   <Card>
-    <h3 class="mb-3 text-sm font-semibold uppercase tracking-widest text-muted-foreground">All Permits</h3>
+    <h3 class="mb-3 text-sm font-semibold uppercase tracking-widest text-muted-foreground">
+      All Permits
+    </h3>
     {#if loading}
       <div class="space-y-2">
         <Skeleton class="h-10 w-full" />
@@ -110,19 +119,25 @@
   <div class="space-y-4">
     <Input label="Permit Type" bind:value={newPermit.type} placeholder="e.g. Hot Work" />
     <Input label="Zone ID" bind:value={newPermit.zoneId} placeholder="Zone identifier" />
-    <Input label="Description" bind:value={newPermit.description} placeholder="Brief description..." />
-    <Button onclick={async () => {
-      const { mutation } = await import('$utils/convex-types');
-      await mutation('permits:createPermit', {
-        projectId,
-        type: newPermit.type,
-        zoneId: newPermit.zoneId,
-        description: newPermit.description,
-        issuedTo: userId,
-      });
-      showPermitModal = false;
-      newPermit = { type: '', zoneId: '', description: '' };
-    }}>
+    <Input
+      label="Description"
+      bind:value={newPermit.description}
+      placeholder="Brief description..."
+    />
+    <Button
+      onclick={async () => {
+        const { mutation } = await import('$utils/convex-types');
+        await mutation('permits:createPermit', {
+          projectId,
+          type: newPermit.type,
+          zoneId: newPermit.zoneId,
+          description: newPermit.description,
+          issuedTo: userId,
+        });
+        showPermitModal = false;
+        newPermit = { type: '', zoneId: '', description: '' };
+      }}
+    >
       Create Permit
     </Button>
   </div>

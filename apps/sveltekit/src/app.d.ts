@@ -3,9 +3,23 @@
 declare namespace App {
   interface Locals {
     auth: () => Promise<{
-      user: { id: string; name: string; email: string; role: string; image?: string; projectId?: string }
+      user: {
+        id: string;
+        name: string;
+        email: string;
+        role: string;
+        image?: string;
+        projectId?: string;
+      };
     } | null>;
-    user?: { id: string; name: string; email: string; role: string; image?: string; projectId?: string };
+    user?: {
+      id: string;
+      name: string;
+      email: string;
+      role: string;
+      image?: string;
+      projectId?: string;
+    };
   }
 
   interface PageData {
@@ -23,4 +37,9 @@ declare namespace App {
     message: string;
     code?: string;
   }
+}
+
+declare module '*.vue' {
+  const component: any;
+  export default component;
 }

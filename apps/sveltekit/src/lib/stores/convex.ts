@@ -11,9 +11,9 @@ let client: ConvexClient | null = null;
 
 export function getConvexClient(): ConvexClient {
   if (!client) {
-    let url: string;
+    let url = '';
     convexUrl.subscribe((v) => (url = v))();
-    client = new ConvexClient(url ?? 'http://localhost:3210');
+    client = new ConvexClient(url || 'http://localhost:3210');
   }
   return client;
 }

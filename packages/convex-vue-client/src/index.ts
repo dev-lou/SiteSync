@@ -1,5 +1,6 @@
 import { ref, onUnmounted, type Ref } from 'vue';
-import { ConvexClient, type FunctionReference, type FunctionArgs, type FunctionReturnType } from 'convex/browser';
+import { ConvexClient } from 'convex/browser';
+import type { FunctionReference, FunctionArgs, FunctionReturnType } from 'convex/server';
 
 let clientInstance: ConvexClient | null = null;
 
@@ -45,7 +46,9 @@ export function useConvexQuery(
   const isLoading = ref(true);
   const error = ref<Error>();
 
-  const unsubscribe = client.onUpdate(queryName, ...args, (result: any) => {
+  const queryArgs =
+    args[0] !== undefined && typeof args[0] === 'object' && args[0] !== null ? args[0] : {};
+  const unsubscribe = client.onUpdate(queryName, queryArgs, (result: any) => {
     data.value = result;
     isLoading.value = false;
   });
@@ -68,7 +71,8 @@ export function useMutation<F extends FunctionReference<'mutation'>>(
     isPending.value = true;
     error.value = undefined;
     try {
-      const result = await client.mutation(mutation, ...args);
+      const mutationArgs = args[0] !== undefined ? args[0] : {};
+      const result = await client.mutation(mutation, mutationArgs);
       return result as FunctionReturnType<F>;
     } catch (err) {
       error.value = err instanceof Error ? err : new Error(String(err));
@@ -96,10 +100,11 @@ export function useOptimisticMutation<F extends FunctionReference<'mutation'>>(
     error.value = undefined;
 
     try {
+      const mutationArgs = args[0] !== undefined ? args[0] : {};
       if (optimisticUpdate) {
-        return await client.mutation(mutation, args);
+        return await client.mutation(mutation, mutationArgs);
       }
-      return await client.mutation(mutation, args);
+      return await client.mutation(mutation, mutationArgs);
     } catch (err) {
       error.value = err instanceof Error ? err : new Error(String(err));
       throw error.value;

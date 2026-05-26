@@ -18,7 +18,7 @@ variable "ssh_public_key" {
 variable "github_repo" {
   description = "GitHub repository URL for ArgoCD"
   type        = string
-  default     = "https://github.com/your-org/sitesync-pro"
+  default     = "https://github.com/dev-lou/SiteSync"
 }
 
 variable "domain_name" {

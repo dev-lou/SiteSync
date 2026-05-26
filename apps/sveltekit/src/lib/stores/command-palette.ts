@@ -160,7 +160,7 @@ export function registerBuiltinCommands() {
       keywords: ['theme', 'dark', 'light', 'mode', 'appearance'],
       icon: '🌓',
       action: () => {
-        const { theme } = import('./theme').then((m) => m.theme.toggle());
+        import('./theme').then((m) => m.theme.toggle());
       },
       group: 'Actions',
     },

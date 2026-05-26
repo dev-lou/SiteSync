@@ -119,9 +119,18 @@ export interface MutationArgs {
   };
   'inspections:completeInspection': { inspectionId: string; status: string };
   'blueprints:create': { projectId: string; title: string; description?: string };
-  'blueprints:uploadNewRevision': { blueprintId: string; fileStorageId: string; changeLog?: string };
+  'blueprints:uploadNewRevision': {
+    blueprintId: string;
+    fileStorageId: string;
+    changeLog?: string;
+  };
   'blueprints:updateStatus': { blueprintId: string; newStatus: string };
-  'blueprints:createChangeOrder': { blueprintId: string; projectId: string; title: string; description: string };
+  'blueprints:createChangeOrder': {
+    blueprintId: string;
+    projectId: string;
+    title: string;
+    description: string;
+  };
   'blueprints:approveChangeOrder': { changeOrderId: string };
   'permits:createPermit': Record<string, unknown>;
   'permits:activatePermit': { permitId: string };
@@ -130,7 +139,13 @@ export interface MutationArgs {
   'permits:revokePermit': { permitId: string };
   'permits:createZone': { projectId: string; name: string; svgPath: string };
   'kanban:createBoard': Record<string, unknown>;
-  'kanban:createCard': { boardId: string; title: string; description?: string; assigneeId?: string; priority: string };
+  'kanban:createCard': {
+    boardId: string;
+    title: string;
+    description?: string;
+    assigneeId?: string;
+    priority: string;
+  };
   'kanban:moveCard': { cardId: string; columnId: string; order?: number };
   'kanban:updateCard': Record<string, unknown>;
   'kanban:deleteCard': { cardId: string };
@@ -196,7 +211,7 @@ export async function typedMutation<N extends ConvexMutation>(
   name: N,
   args: MutationArgs[N],
 ): Promise<unknown> {
-  return client.mutation(name, args as Record<string, unknown>);
+  return client.mutation(name as any, args as Record<string, unknown>);
 }
 
 /** Type-safe query subscription for Vue widgets */
@@ -206,5 +221,5 @@ export function typedQuery<N extends ConvexQuery>(
   args: QueryArgs[N],
   callback: (result: unknown) => void,
 ): () => void {
-  return client.onUpdate(name, args as Record<string, unknown>, callback);
+  return client.onUpdate(name as any, args as Record<string, unknown>, callback);
 }

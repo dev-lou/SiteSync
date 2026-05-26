@@ -11,14 +11,24 @@
     "preview": "pnpm --filter @sitesync/sveltekit preview",
     "lint": "pnpm --filter @sitesync/sveltekit lint",
     "check": "pnpm --filter @sitesync/sveltekit check",
+    "check:convex": "cd convex && npx tsc --noEmit",
     "test": "pnpm --filter @sitesync/design-tokens test",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "validate": "pnpm lint && pnpm check && pnpm check:convex && pnpm test"
+  },
+  "devDependencies": {
+    "prettier": "^3.5.0",
+    "prettier-plugin-svelte": "^4.0.0",
+    "prettier-plugin-tailwindcss": "^0.8.0"
   },
   "engines": {
     "node": ">=22.0.0",
     "pnpm": ">=9.0.0"
   },
   "pnpm": {
-    "onlyBuiltDependencies": ["esbuild"]
+    "onlyBuiltDependencies": [
+      "esbuild"
+    ]
   }
 }

@@ -8,8 +8,8 @@
   import Input from '$ui/Input.svelte';
   import Select from '$ui/Select.svelte';
   import Skeleton from '$ui/Skeleton.svelte';
-  import Toast from '$ui/Toast.svelte';
-  import { useConvexQuery } from '$stores/convex-query';
+  import { addToast } from '$stores/toast';
+  import { useConvexQuery } from '$stores/convex-query.svelte';
   import { mutation } from '$utils/convex-types';
   import { roleLabels, type UserRole } from '$design/tokens';
   import { Users, Shield, UserMinus, UserPlus, RefreshCw } from '@lucide/svelte';
@@ -17,9 +17,7 @@
   const currentRole = $derived($page.data.user?.role || '');
   const currentUser = $derived($page.data.user);
 
-  const usersQuery = $derived(
-    useConvexQuery('users:list', {}),
-  );
+  const usersQuery = $derived(useConvexQuery('users:list', {}));
 
   const users = $derived(usersQuery?.data || []);
   const loading = $derived(usersQuery?.loading ?? true);
@@ -31,8 +29,6 @@
   let newUser = $state({ name: '', email: '', role: 'field_engineer' as UserRole });
   let editRole = $state<UserRole>('field_engineer');
   let actionLoading = $state(false);
-  let toastMessage = $state('');
-  let toastType = $state<'success' | 'error'>('success');
 
   const roleOptions = Object.entries(roleLabels).map(([value, label]) => ({ value, label }));
 
@@ -55,11 +51,9 @@
       });
       showCreateModal = false;
       newUser = { name: '', email: '', role: 'field_engineer' };
-      toastMessage = `User ${userName} created successfully`;
-      toastType = 'success';
+      addToast('success', `User ${userName} created successfully`);
     } catch (err) {
-      toastMessage = `Failed: ${(err as Error).message}`;
-      toastType = 'error';
+      addToast('error', `Failed: ${(err as Error).message}`);
     } finally {
       actionLoading = false;
     }
@@ -74,11 +68,9 @@
         newRole: editRole,
       });
       showEditModal = false;
-      toastMessage = `Role updated to ${roleLabels[editRole]}`;
-      toastType = 'success';
+      addToast('success', `Role updated to ${roleLabels[editRole]}`);
     } catch (err) {
-      toastMessage = `Failed: ${(err as Error).message}`;
-      toastType = 'error';
+      addToast('error', `Failed: ${(err as Error).message}`);
     } finally {
       actionLoading = false;
     }
@@ -88,11 +80,9 @@
     if (!confirm('Deactivate this user? They will lose access immediately.')) return;
     try {
       await mutation('users:deactivateUser', { userId });
-      toastMessage = 'User deactivated';
-      toastType = 'success';
+      addToast('success', 'User deactivated');
     } catch (err) {
-      toastMessage = `Failed: ${(err as Error).message}`;
-      toastType = 'error';
+      addToast('error', `Failed: ${(err as Error).message}`);
     }
   }
 </script>
@@ -101,10 +91,12 @@
   <div class="flex items-center justify-between">
     <div>
       <h1 class="text-2xl font-bold tracking-tight">User Management</h1>
-      <p class="mt-1 text-sm text-muted-foreground">Manage users, roles, and permissions across projects</p>
+      <p class="mt-1 text-sm text-muted-foreground">
+        Manage users, roles, and permissions across projects
+      </p>
     </div>
     {#if currentRole === 'admin'}
-      <Button onclick={() => showCreateModal = true}>
+      <Button onclick={() => (showCreateModal = true)}>
         <UserPlus class="h-4 w-4" />
         <span>Add User</span>
       </Button>
@@ -141,10 +133,14 @@
 
     <!-- Role distribution -->
     <Card padding="lg">
-      <h3 class="mb-3 text-sm font-semibold uppercase tracking-widest text-muted-foreground">Role Distribution</h3>
+      <h3 class="mb-3 text-sm font-semibold uppercase tracking-widest text-muted-foreground">
+        Role Distribution
+      </h3>
       <div class="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
         {#each Object.entries(roleLabels) as [role, label]}
-          {@const count = (users as Array<Record<string, unknown>>).filter((u) => u.role === role).length}
+          {@const count = (users as Array<Record<string, unknown>>).filter(
+            (u) => u.role === role,
+          ).length}
           <div class="rounded-md border border-border p-3 text-center">
             <p class="text-lg font-bold">{count}</p>
             <p class="text-xs text-muted-foreground">{label}</p>
@@ -159,12 +155,18 @@
 <Modal bind:open={showCreateModal} title="Add User">
   <div class="space-y-4">
     <Input label="Name" bind:value={newUser.name} placeholder="Full name" required />
-    <Input label="Email" type="email" bind:value={newUser.email} placeholder="user@example.com" required />
+    <Input
+      label="Email"
+      type="email"
+      bind:value={newUser.email}
+      placeholder="user@example.com"
+      required
+    />
     <Select
       label="Role"
       options={roleOptions}
       value={newUser.role}
-      onchange={(val: string) => newUser.role = val as UserRole}
+      onchange={(val: string) => (newUser.role = val as UserRole)}
     />
     <Button onclick={createUser} loading={actionLoading}>
       <UserPlus class="h-4 w-4" />
@@ -174,12 +176,18 @@
 </Modal>
 
 <!-- Edit User Modal -->
-<Modal bind:open={showEditModal} title={selectedUser?.name as string || 'Edit User'}>
+<Modal bind:open={showEditModal} title={(selectedUser?.name as string) || 'Edit User'}>
   {#if selectedUser}
     <div class="space-y-4">
       <div class="rounded-md border border-border p-3">
-        <p class="text-sm"><span class="font-medium">Email:</span> {selectedUser.email as string}</p>
-        <p class="text-sm mt-1"><span class="font-medium">Current Role:</span> {roleLabels[selectedUser.role as UserRole] || selectedUser.role as string}</p>
+        <p class="text-sm">
+          <span class="font-medium">Email:</span>
+          {selectedUser.email as string}
+        </p>
+        <p class="text-sm mt-1">
+          <span class="font-medium">Current Role:</span>
+          {roleLabels[selectedUser.role as UserRole] || (selectedUser.role as string)}
+        </p>
         <p class="text-sm mt-1">
           <span class="font-medium">Status:</span>
           <Badge variant={selectedUser.isActive ? 'success' : 'danger'}>
@@ -192,7 +200,7 @@
         label="New Role"
         options={roleOptions}
         value={editRole}
-        onchange={(val: string) => editRole = val as UserRole}
+        onchange={(val: string) => (editRole = val as UserRole)}
       />
 
       <div class="flex gap-3">
@@ -216,9 +224,3 @@
     </div>
   {/if}
 </Modal>
-
-{#if toastMessage}
-  <div class="fixed bottom-4 right-4 z-50">
-    <Toast type={toastType} message={toastMessage} />
-  </div>
-{/if}

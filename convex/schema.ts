@@ -48,11 +48,7 @@ const permitType = v.union(
   v.literal('general'),
 );
 
-const zoneStatus = v.union(
-  v.literal('active'),
-  v.literal('suspended'),
-  v.literal('completed'),
-);
+const zoneStatus = v.union(v.literal('active'), v.literal('suspended'), v.literal('completed'));
 
 const cardStatus = v.union(
   v.literal('backlog'),

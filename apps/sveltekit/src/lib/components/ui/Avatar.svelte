@@ -35,7 +35,7 @@
   {...rest}
 >
   {#if src && !imgError}
-    <img {src} {alt} class="h-full w-full object-cover" onerror={() => imgError = true} />
+    <img {src} {alt} class="h-full w-full object-cover" onerror={() => (imgError = true)} />
   {:else}
     <span aria-hidden="true">{fallback?.slice(0, 2).toUpperCase() || '?'}</span>
   {/if}

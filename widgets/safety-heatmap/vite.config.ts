@@ -9,7 +9,7 @@ export default defineConfig({
       entry: resolve(__dirname, 'src/index.ts'),
       name: 'SafetyHeatmap',
       formats: ['es', 'umd'],
-      fileName: (f) => f === 'es' ? 'safety-heatmap.js' : `safety-heatmap.${f}.cjs`,
+      fileName: (f) => (f === 'es' ? 'safety-heatmap.js' : `safety-heatmap.${f}.cjs`),
     },
     rollupOptions: {
       external: ['vue', 'convex/browser'],

@@ -1,0 +1,35 @@
+# Global owners (default for all files)
+* @dev-lou
+
+# CI/CD pipeline ownership
+.github/workflows/ @dev-lou
+.github/CODEOWNERS @dev-lou
+
+# Infrastructure ownership
+terraform/ @dev-lou
+kubernetes/ @dev-lou
+docker/ @dev-lou
+Dockerfile @dev-lou
+docker-compose.yml @dev-lou
+
+# Convex backend ownership
+convex/ @dev-lou
+
+# SvelteKit application
+apps/sveltekit/ @dev-lou
+
+# Vue widget packages
+widgets/delivery-tracker/ @dev-lou
+widgets/inspection-form/ @dev-lou
+widgets/blueprint-viewer/ @dev-lou
+widgets/safety-heatmap/ @dev-lou
+widgets/kanban-board/ @dev-lou
+
+# Shared packages
+packages/convex-vue-client/ @dev-lou
+packages/design-tokens/ @dev-lou
+
+# Root configuration
+package.json @dev-lou
+pnpm-workspace.yaml @dev-lou
+tsconfig.json @dev-lou

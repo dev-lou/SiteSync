@@ -9,8 +9,10 @@
   let isOpen = $state(false);
   let searchQuery = $state('');
 
-  const commands = $derived($commandPalette.commands);
-  const filtered = $derived($commandPalette.filtered);
+  const { commands: commandsStore, filtered: filteredStore, isOpen: isOpenStore } = commandPalette;
+
+  const commands = $derived($commandsStore);
+  const filtered = $derived($filteredStore);
 
   // Subscribe to store state
   const unsubscribeOpen = commandPalette.isOpen.subscribe((v) => {
@@ -34,8 +36,9 @@
         e.preventDefault();
         commandPalette.toggle();
       }
-      if (e.key === 'Escape' && $commandPalette.isOpen) {
+      if (e.key === 'Escape' && $isOpenStore) {
         commandPalette.close();
+        e.preventDefault();
       }
     }
 
@@ -96,11 +99,15 @@
 </script>
 
 {#if isOpen}
-  <!-- Backdrop -->
+  <!-- svelte-ignore a11y_no_static_element_interactions -->
   <div
     class="fixed inset-0 z-50 bg-black/30 backdrop-blur-sm"
     onclick={() => commandPalette.close()}
-  />
+    onkeydown={(e) => {
+      if (e.key === 'Escape') commandPalette.close();
+    }}
+    role="presentation"
+  ></div>
 
   <!-- Palette -->
   <div
@@ -123,7 +130,9 @@
         autocomplete="off"
         spellcheck="false"
       />
-      <kbd class="hidden rounded-md border border-border px-1.5 py-0.5 text-[10px] text-muted-foreground sm:inline-block">
+      <kbd
+        class="hidden rounded-md border border-border px-1.5 py-0.5 text-[10px] text-muted-foreground sm:inline-block"
+      >
         ESC
       </kbd>
     </div>
@@ -138,14 +147,16 @@
       {:else}
         {#each grouped as [group, groupItems]}
           <div>
-            <p class="px-2 pb-1 pt-3 text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">
+            <p
+              class="px-2 pb-1 pt-3 text-[10px] font-semibold uppercase tracking-widest text-muted-foreground"
+            >
               {group}
             </p>
             {#each groupItems as cmd, i}
               {@const globalIndex = filtered.indexOf(cmd)}
               <button
                 onclick={() => executeCommand(globalIndex)}
-                onmouseenter={() => selectedIndex = globalIndex}
+                onmouseenter={() => (selectedIndex = globalIndex)}
                 class={cn(
                   'flex w-full items-center gap-3 rounded-md px-3 py-2.5 text-left text-sm transition-colors',
                   globalIndex === selectedIndex
@@ -163,7 +174,9 @@
                   {/if}
                 </div>
                 {#if cmd.shortcut}
-                  <kbd class="shrink-0 rounded-md border border-border px-1.5 py-0.5 text-[10px] text-muted-foreground">
+                  <kbd
+                    class="shrink-0 rounded-md border border-border px-1.5 py-0.5 text-[10px] text-muted-foreground"
+                  >
                     {cmd.shortcut}
                   </kbd>
                 {/if}

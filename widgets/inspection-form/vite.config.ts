@@ -9,7 +9,7 @@ export default defineConfig({
       entry: resolve(__dirname, 'src/index.ts'),
       name: 'InspectionForm',
       formats: ['es', 'umd'],
-      fileName: (f) => f === 'es' ? 'inspection-form.js' : `inspection-form.${f}.cjs`,
+      fileName: (f) => (f === 'es' ? 'inspection-form.js' : `inspection-form.${f}.cjs`),
     },
     rollupOptions: {
       external: ['vue', 'convex/browser'],

@@ -9,7 +9,7 @@ export default defineConfig({
       entry: resolve(__dirname, 'src/index.ts'),
       name: 'KanbanBoard',
       formats: ['es', 'umd'],
-      fileName: (f) => f === 'es' ? 'kanban-board.js' : `kanban-board.${f}.cjs`,
+      fileName: (f) => (f === 'es' ? 'kanban-board.js' : `kanban-board.${f}.cjs`),
     },
     rollupOptions: {
       external: ['vue', 'convex/browser'],

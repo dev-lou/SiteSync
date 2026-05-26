@@ -9,7 +9,7 @@ spec:
     server: https://kubernetes.default.svc
   project: default
   source:
-    repoURL: https://github.com/your-org/sitesync-pro
+    repoURL: https://github.com/dev-lou/SiteSync
     path: kubernetes
     targetRevision: main
   syncPolicy:
