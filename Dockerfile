@@ -1,5 +1,5 @@
 # Stage 1: Install dependencies
-FROM node:22-alpine AS deps
+FROM node:26-alpine AS deps
 WORKDIR /app
 
 RUN apk add --no-cache libc6-compat
@@ -20,7 +20,7 @@ RUN npm install -g pnpm@10
 RUN pnpm install --frozen-lockfile
 
 # Stage 2: Build all packages
-FROM node:22-alpine AS builder
+FROM node:26-alpine AS builder
 WORKDIR /app
 
 RUN npm install -g pnpm@10
@@ -48,7 +48,7 @@ RUN CI=true pnpm prune --prod
 # Stage 3: Production runner
 ARG BUILD_DATE
 
-FROM node:22-alpine AS runner
+FROM node:26-alpine AS runner
 WORKDIR /app
 
 # Create non-root user with explicit UID/GID
