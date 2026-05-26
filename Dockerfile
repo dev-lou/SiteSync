@@ -43,7 +43,7 @@ RUN pnpm --filter @sitesync/kanban-board build
 RUN pnpm --filter @sitesync/sveltekit build
 
 # Prune dev dependencies for production
-RUN pnpm prune --prod
+RUN CI=true pnpm prune --prod
 
 # Stage 3: Production runner
 ARG BUILD_DATE
