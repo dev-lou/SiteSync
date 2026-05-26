@@ -6,7 +6,7 @@
   import Badge from '$ui/Badge.svelte';
   import Skeleton from '$ui/Skeleton.svelte';
   import Select from '$ui/Select.svelte';
-  import { useConvexQuery } from '$stores/convex-query';
+  import { useConvexQuery } from '$stores/convex-query.svelte';
   import { BarChart3, TrendingUp, Download, FileText, RefreshCw, Calendar } from '@lucide/svelte';
 
   const projectId = $derived($page.data.user?.projectId || '');
@@ -271,7 +271,7 @@
             <Skeleton class="h-48 w-full" />
           </div>
         {:else}
-          <canvas bind:this={chartCanvas} />
+          <canvas bind:this={chartCanvas}></canvas>
         {/if}
       </div>
     </Card>

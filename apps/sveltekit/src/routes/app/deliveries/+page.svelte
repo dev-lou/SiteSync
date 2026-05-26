@@ -9,7 +9,7 @@
   import Modal from '$ui/Modal.svelte';
   import Input from '$ui/Input.svelte';
   import { Plus, Truck, MapPin, Camera, PenLine } from '@lucide/svelte';
-  import { useConvexQuery } from '$stores/convex-query';
+  import { useConvexQuery } from '$stores/convex-query.svelte';
   import DeliveryTrackerWrapper from '$lib/components/widgets/DeliveryTrackerWrapper.svelte';
 
   const projectId = $derived($page.data.user?.projectId || '');
@@ -139,7 +139,7 @@
               const trimmed = m.trim();
               const match = trimmed.match(/^(\d+)\s*[x×]?\s*(.+)$/i);
               if (match) {
-                return { name: match[2].trim(), quantity: parseInt(match[1]), unit: 'ea' };
+                return { name: match[2]!.trim(), quantity: parseInt(match[1]!), unit: 'ea' };
               }
               return { name: trimmed, quantity: 1, unit: 'ea' };
             })

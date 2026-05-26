@@ -9,8 +9,10 @@
   let isOpen = $state(false);
   let searchQuery = $state('');
 
-  const commands = $derived($commandPalette.commands);
-  const filtered = $derived($commandPalette.filtered);
+  const { commands: commandsStore, filtered: filteredStore, isOpen: isOpenStore } = commandPalette;
+
+  const commands = $derived($commandsStore);
+  const filtered = $derived($filteredStore);
 
   // Subscribe to store state
   const unsubscribeOpen = commandPalette.isOpen.subscribe((v) => {
@@ -34,8 +36,9 @@
         e.preventDefault();
         commandPalette.toggle();
       }
-      if (e.key === 'Escape' && $commandPalette.isOpen) {
+      if (e.key === 'Escape' && $isOpenStore) {
         commandPalette.close();
+        e.preventDefault();
       }
     }
 
@@ -96,11 +99,15 @@
 </script>
 
 {#if isOpen}
-  <!-- Backdrop -->
+  <!-- svelte-ignore a11y_no_static_element_interactions -->
   <div
     class="fixed inset-0 z-50 bg-black/30 backdrop-blur-sm"
     onclick={() => commandPalette.close()}
-  />
+    onkeydown={(e) => {
+      if (e.key === 'Escape') commandPalette.close();
+    }}
+    role="presentation"
+  ></div>
 
   <!-- Palette -->
   <div

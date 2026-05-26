@@ -23,7 +23,7 @@
     value?: string;
     placeholder?: string;
     class?: string;
-    onchange?: (e: Event) => void;
+    onchange?: (value: string) => void;
   } & Record<string, unknown> = $props();
 
   const inputId = `select-${Math.random().toString(36).slice(2, 9)}`;
@@ -36,8 +36,8 @@
   <div class="relative">
     <select
       {value}
-      {onchange}
-      {id}
+      onchange={(e) => onchange?.(e.currentTarget.value)}
+      id={inputId}
       class={cn(
         'focus-ring flex h-9 w-full appearance-none rounded-md border bg-background px-3 py-2 pr-8 text-sm text-foreground',
         !error ? 'border-input' : 'border-danger',

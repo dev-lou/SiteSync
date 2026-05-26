@@ -3,8 +3,8 @@
   import Card from '$ui/Card.svelte';
   import Badge from '$ui/Badge.svelte';
   import Skeleton from '$ui/Skeleton.svelte';
-  import { Package, ClipboardCheck, FileText, ShieldAlert, KanbanSquare } from '@lucide/svelte';
-  import { useConvexQuery } from '$stores/convex-query';
+  import { Package, ClipboardCheck, FileText, ShieldAlert, Kanban } from '@lucide/svelte';
+  import { useConvexQuery } from '$stores/convex-query.svelte';
 
   const projectId = $derived($page.data.user?.projectId || '');
 
@@ -128,7 +128,7 @@
           <div
             class="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary"
           >
-            <KanbanSquare class="h-5 w-5" />
+            <Kanban class="h-5 w-5" />
           </div>
           {#if myTasks?.loading}
             <Skeleton class="h-5 w-16" />

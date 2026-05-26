@@ -1,18 +1,17 @@
 import { httpRouter } from 'convex/server';
-import { createAuth } from './auth';
+import { httpAction } from './_generated/server';
+import { authComponent, createAuth } from './auth';
 
 const http = httpRouter();
 
-const auth = createAuth();
-
-auth.registerRoutes(http);
+authComponent.registerRoutes(http, createAuth);
 
 http.route({
   path: '/health',
   method: 'GET',
-  handler: async () => {
-    return new Response('OK', { status: 200 });
-  },
+  handler: httpAction(async () => {
+    return new Response('OK');
+  }),
 });
 
 export default http;

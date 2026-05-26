@@ -1,8 +1,15 @@
 <script lang="ts">
+  import { onMount } from 'svelte';
   import { theme } from '$stores/theme';
   import Button from '$ui/Button.svelte';
   import Card from '$ui/Card.svelte';
   import { Sun, Moon } from '@lucide/svelte';
+
+  let mounted = $state(false);
+  onMount(() => {
+    mounted = true;
+  });
+  const isDark = $derived(mounted && $theme === 'dark');
 </script>
 
 <div class="flex min-h-dvh flex-col items-center justify-center p-6">
@@ -12,11 +19,8 @@
 
     <div class="mt-4 flex items-center justify-center gap-3">
       <Button variant="outline" size="sm" onclick={() => theme.toggle()}>
-        {#if $theme === 'dark'}
-          <Sun class="h-4 w-4" />
-        {:else}
-          <Moon class="h-4 w-4" />
-        {/if}
+        <Sun class="h-4 w-4" style="display: {isDark ? 'block' : 'none'}" />
+        <Moon class="h-4 w-4" style="display: {isDark ? 'none' : 'block'}" />
         <span class="ml-2">Toggle Theme</span>
       </Button>
     </div>

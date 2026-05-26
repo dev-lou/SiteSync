@@ -8,7 +8,7 @@
     ClipboardCheck,
     FileText,
     ShieldAlert,
-    KanbanSquare,
+    Kanban,
     ChevronLeft,
     Users,
     Settings,
@@ -62,7 +62,7 @@
     },
     {
       label: 'Kanban',
-      icon: KanbanSquare,
+      icon: Kanban,
       href: '/app/projects',
       roles: ['admin', 'project_manager', 'field_engineer', 'architect'],
     },

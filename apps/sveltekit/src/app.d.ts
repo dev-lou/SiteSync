@@ -38,3 +38,8 @@ declare namespace App {
     code?: string;
   }
 }
+
+declare module '*.vue' {
+  const component: any;
+  export default component;
+}

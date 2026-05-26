@@ -3,7 +3,7 @@
   import { X } from '@lucide/svelte';
 
   let {
-    open = false,
+    open = $bindable(false),
     title = '',
     size = 'md' as 'sm' | 'md' | 'lg' | 'xl' | 'full',
     closeOnOverlay = true,
@@ -34,11 +34,15 @@
   <div
     class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm"
     onclick={handleOverlayClick}
+    onkeydown={handleKeydown}
     role="dialog"
+    tabindex="-1"
     aria-modal="true"
     aria-label={title}
   >
+    <!-- svelte-ignore a11y_no_static_element_interactions -->
     <div
+      onclick={(e) => e.stopPropagation()}
       class={cn(
         'relative max-h-[85vh] overflow-y-auto rounded-lg bg-background shadow-xl',
         'animate-[fadeIn_0.15s_ease-out,slideUp_0.2s_ease-out]',

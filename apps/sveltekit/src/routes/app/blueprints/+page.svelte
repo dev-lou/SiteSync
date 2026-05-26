@@ -10,7 +10,7 @@
   import Input from '$ui/Input.svelte';
   import WidgetWrapper from '$lib/components/widgets/WidgetWrapper.svelte';
   import { Plus, FileText, X } from '@lucide/svelte';
-  import { useConvexQuery } from '$stores/convex-query';
+  import { useConvexQuery } from '$stores/convex-query.svelte';
 
   let selectedBlueprintId = $state<string | null>(null);
 
@@ -79,7 +79,7 @@
             data={blueprints}
             searchable
             emptyMessage="No blueprints yet."
-            onrowclick={(row) => (selectedBlueprintId = row._id)}
+            onrowclick={(row) => (selectedBlueprintId = row._id as string)}
           />
         {/if}
       {:else}

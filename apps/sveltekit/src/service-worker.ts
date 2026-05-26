@@ -1,3 +1,4 @@
+/// <reference lib="webworker" />
 /// <reference types="@sveltejs/kit" />
 
 import { build, files, prerendered, version } from '$service-worker';
@@ -11,45 +12,50 @@ const ASSETS = [
   ...prerendered, // prerendered pages
 ];
 
+const sw = self as unknown as ServiceWorkerGlobalScope;
+
 // Install: cache all static assets
-self.addEventListener('install', (event) => {
+sw.addEventListener('install', (event: ExtendableEvent) => {
   event.waitUntil(
     (async () => {
       const cache = await caches.open(CACHE);
       await cache.addAll(ASSETS);
       // Force the waiting service worker to activate
-      await self.skipWaiting();
+      await sw.skipWaiting();
     })(),
   );
 });
 
 // Activate: clean up old caches
-self.addEventListener('activate', (event) => {
+sw.addEventListener('activate', (event: ExtendableEvent) => {
   event.waitUntil(
     (async () => {
       const keys = await caches.keys();
       await Promise.all(
-        keys.map((key) => {
-          if (key !== CACHE) return caches.delete(key);
+        keys.map(async (key) => {
+          if (key !== CACHE) {
+            return caches.delete(key);
+          }
+          return undefined;
         }),
       );
       // Take control of all clients immediately
-      await self.clients.claim();
+      await sw.clients.claim();
     })(),
   );
 });
 
 // Fetch: cache-first for static assets, network-first for pages and API
-self.addEventListener('fetch', (event) => {
+sw.addEventListener('fetch', (event: FetchEvent) => {
   const { request } = event;
   const url = new URL(request.url);
 
   // Skip non-GET requests and external requests
   if (request.method !== 'GET') return;
-  if (url.origin !== self.location.origin) return;
+  if (url.origin !== sw.location.origin) return;
 
   // For static assets (build files), use cache-first
-  if (ASSETS.includes(url.pathname)) {
+  if (ASSETS.includes(url.pathname as any)) {
     event.respondWith(cacheFirst(request));
     return;
   }

@@ -7,8 +7,8 @@
   import Input from '$ui/Input.svelte';
   import Skeleton from '$ui/Skeleton.svelte';
   import WidgetWrapper from '$lib/components/widgets/WidgetWrapper.svelte';
-  import { KanbanSquare, Circle, AlertCircle, ExternalLink } from '@lucide/svelte';
-  import { useConvexQuery } from '$stores/convex-query';
+  import { Kanban, Circle, AlertCircle, ExternalLink } from '@lucide/svelte';
+  import { useConvexQuery } from '$stores/convex-query.svelte';
 
   const userId = $derived($page.data.user?.id || '');
   const projectId = $derived($page.data.user?.projectId || '');
@@ -54,7 +54,7 @@
         <div
           class="flex h-12 w-12 items-center justify-center rounded-full bg-muted text-muted-foreground"
         >
-          <KanbanSquare class="h-6 w-6" />
+          <Kanban class="h-6 w-6" />
         </div>
         <p class="mt-3 text-sm font-medium">No tasks assigned to you yet</p>
         <p class="text-sm text-muted-foreground">
@@ -96,7 +96,7 @@
       <div
         class="flex h-10 w-10 items-center justify-center rounded-lg bg-muted text-muted-foreground"
       >
-        <KanbanSquare class="h-5 w-5" />
+        <Kanban class="h-5 w-5" />
       </div>
       <div>
         <p class="font-medium">Kanban Board</p>

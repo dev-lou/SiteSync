@@ -1,12 +1,13 @@
 <script lang="ts">
   import { page } from '$app/stores';
+  import { onMount } from 'svelte';
   import { theme } from '$stores/theme';
   import Card from '$ui/Card.svelte';
   import Button from '$ui/Button.svelte';
   import Input from '$ui/Input.svelte';
   import Badge from '$ui/Badge.svelte';
   import Avatar from '$ui/Avatar.svelte';
-  import Toast from '$ui/Toast.svelte';
+  import { addToast } from '$stores/toast';
   import { User, Bell, Palette, Sun, Moon, Save } from '@lucide/svelte';
 
   const user = $derived($page.data.user);
@@ -17,16 +18,22 @@
   let notifyInspections = $state(true);
   let notifyPermits = $state(true);
   let notifyTasks = $state(true);
-  let toastMessage = $state('');
-  let toastType = $state<'success' | 'error'>('success');
   let initialized = $state(false);
+  let mounted = $state(false);
 
-  // Initialize from user data once
-  if (user && !initialized) {
-    profileName = user.name || '';
-    profileEmail = user.email || '';
-    initialized = true;
-  }
+  onMount(() => {
+    mounted = true;
+  });
+  const isDark = $derived(mounted && $theme === 'dark');
+
+  // Initialize from user data once when user is available reactively
+  $effect(() => {
+    if (user && !initialized) {
+      profileName = user.name || '';
+      profileEmail = user.email || '';
+      initialized = true;
+    }
+  });
 
   const notificationItems = [
     { label: 'Delivery updates', desc: 'Material arrivals, delays, and ETA changes' },
@@ -36,8 +43,7 @@
   ];
 
   function saveProfile() {
-    toastMessage = 'Profile updated successfully';
-    toastType = 'success';
+    addToast('success', 'Profile updated successfully');
   }
 
   function resetSettings() {
@@ -45,8 +51,7 @@
     notifyInspections = true;
     notifyPermits = true;
     notifyTasks = true;
-    toastMessage = 'Settings reset to defaults';
-    toastType = 'success';
+    addToast('success', 'Settings reset to defaults');
   }
 </script>
 
@@ -104,21 +109,18 @@
         <div
           class="flex h-9 w-9 items-center justify-center rounded-md bg-muted text-muted-foreground"
         >
-          {#if $theme === 'dark'}
-            <Moon class="h-4 w-4" />
-          {:else}
-            <Sun class="h-4 w-4" />
-          {/if}
+          <Moon class="h-4 w-4" style="display: {isDark ? 'block' : 'none'}" />
+          <Sun class="h-4 w-4" style="display: {isDark ? 'none' : 'block'}" />
         </div>
         <div>
           <p class="text-sm font-medium">Theme</p>
           <p class="text-xs text-muted-foreground">
-            Currently: {$theme === 'dark' ? 'Dark Mode' : 'Light Mode'}
+            Currently: {isDark ? 'Dark Mode' : 'Light Mode'}
           </p>
         </div>
       </div>
       <Button variant="outline" onclick={() => theme.toggle()}>
-        {$theme === 'dark' ? 'Switch to Light' : 'Switch to Dark'}
+        {isDark ? 'Switch to Light' : 'Switch to Dark'}
       </Button>
     </div>
   </Card>
@@ -177,9 +179,3 @@
     <Button variant="outline" onclick={resetSettings}>Reset to Defaults</Button>
   </div>
 </div>
-
-{#if toastMessage}
-  <div class="fixed bottom-4 right-4 z-50">
-    <Toast type={toastType} message={toastMessage} />
-  </div>
-{/if}

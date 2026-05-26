@@ -7,7 +7,7 @@
     ClipboardCheck,
     ShieldAlert,
     FileText,
-    KanbanSquare,
+    Kanban,
     Info,
   } from '@lucide/svelte';
   import type { Notification, NotificationType } from '$stores/notifications';
@@ -43,7 +43,7 @@
     inspection: ClipboardCheck,
     permit: ShieldAlert,
     blueprint: FileText,
-    task: KanbanSquare,
+    task: Kanban,
     system: Info,
   };
 
@@ -76,8 +76,15 @@
   </button>
 
   {#if open}
-    <!-- Backdrop -->
-    <div class="fixed inset-0 z-40" onclick={close} />
+    <!-- svelte-ignore a11y_no_static_element_interactions -->
+    <div
+      class="fixed inset-0 z-40"
+      onclick={close}
+      onkeydown={(e) => {
+        if (e.key === 'Escape') close();
+      }}
+      role="presentation"
+    ></div>
 
     <!-- Dropdown -->
     <div
@@ -102,7 +109,7 @@
           <div class="flex items-center justify-center py-8">
             <div
               class="h-5 w-5 animate-spin rounded-full border-2 border-border border-t-primary"
-            />
+            ></div>
           </div>
         {:else if notifications.length === 0}
           <div class="flex flex-col items-center py-8 text-center">
@@ -140,7 +147,7 @@
                 <p class="mt-1 text-[10px] text-muted-foreground/60">{timeAgo(notif.createdAt)}</p>
               </div>
               {#if !notif.read}
-                <span class="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-primary" />
+                <span class="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-primary"></span>
               {/if}
             </button>
           {/each}

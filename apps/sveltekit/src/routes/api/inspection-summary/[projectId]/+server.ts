@@ -17,7 +17,7 @@ export const GET: RequestHandler = async ({ params }) => {
 
   const pdfBuffer = await generateInspectionPdf(projectId, dateStr);
 
-  return new Response(pdfBuffer, {
+  return new Response(pdfBuffer.buffer as ArrayBuffer, {
     headers: {
       'Content-Type': 'application/pdf',
       'Content-Disposition': `attachment; filename="inspection-summary-${projectId}-${today}.pdf"`,

@@ -7,7 +7,7 @@
   import Skeleton from '$ui/Skeleton.svelte';
   import WidgetWrapper from '$lib/components/widgets/WidgetWrapper.svelte';
   import { Plus, ClipboardCheck, X } from '@lucide/svelte';
-  import { useConvexQuery } from '$stores/convex-query';
+  import { useConvexQuery } from '$stores/convex-query.svelte';
 
   const projectId = $derived($page.data.user?.projectId || '');
   const userId = $derived($page.data.user?.id || '');
@@ -92,7 +92,7 @@
           data={inspections}
           searchable
           emptyMessage="No inspections yet."
-          onrowclick={(row) => (selectedInspectionId = row._id)}
+          onrowclick={(row) => (selectedInspectionId = row._id as string)}
         />
       {/if}
     </div>

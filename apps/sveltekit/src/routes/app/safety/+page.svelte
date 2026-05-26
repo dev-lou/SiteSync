@@ -10,7 +10,7 @@
   import Select from '$ui/Select.svelte';
   import WidgetWrapper from '$lib/components/widgets/WidgetWrapper.svelte';
   import { Plus, ShieldAlert, AlertTriangle, CheckCircle2, XCircle } from '@lucide/svelte';
-  import { useConvexQuery } from '$stores/convex-query';
+  import { useConvexQuery } from '$stores/convex-query.svelte';
 
   const projectId = $derived($page.data.user?.projectId || '');
   const userId = $derived($page.data.user?.id || '');
@@ -77,7 +77,7 @@
           <Skeleton class="h-12 w-full" />
         {:else}
           {#each permits
-            .filter((p) => p.status === 'active' || p.status === 'expiring')
+            .filter((p: Record<string, unknown>) => p.status === 'active' || p.status === 'expiring')
             .slice(0, 5) as permit}
             <div class="flex items-center justify-between rounded-md border border-border p-3">
               <div>

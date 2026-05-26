@@ -9,7 +9,7 @@
 
   let {
     tabs = [] as Tab[],
-    activeTab = '',
+    activeTab = $bindable(''),
     onchange,
     class: className = '',
     ...rest

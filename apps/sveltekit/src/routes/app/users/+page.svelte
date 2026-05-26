@@ -8,8 +8,8 @@
   import Input from '$ui/Input.svelte';
   import Select from '$ui/Select.svelte';
   import Skeleton from '$ui/Skeleton.svelte';
-  import Toast from '$ui/Toast.svelte';
-  import { useConvexQuery } from '$stores/convex-query';
+  import { addToast } from '$stores/toast';
+  import { useConvexQuery } from '$stores/convex-query.svelte';
   import { mutation } from '$utils/convex-types';
   import { roleLabels, type UserRole } from '$design/tokens';
   import { Users, Shield, UserMinus, UserPlus, RefreshCw } from '@lucide/svelte';
@@ -29,8 +29,6 @@
   let newUser = $state({ name: '', email: '', role: 'field_engineer' as UserRole });
   let editRole = $state<UserRole>('field_engineer');
   let actionLoading = $state(false);
-  let toastMessage = $state('');
-  let toastType = $state<'success' | 'error'>('success');
 
   const roleOptions = Object.entries(roleLabels).map(([value, label]) => ({ value, label }));
 
@@ -53,11 +51,9 @@
       });
       showCreateModal = false;
       newUser = { name: '', email: '', role: 'field_engineer' };
-      toastMessage = `User ${userName} created successfully`;
-      toastType = 'success';
+      addToast('success', `User ${userName} created successfully`);
     } catch (err) {
-      toastMessage = `Failed: ${(err as Error).message}`;
-      toastType = 'error';
+      addToast('error', `Failed: ${(err as Error).message}`);
     } finally {
       actionLoading = false;
     }
@@ -72,11 +68,9 @@
         newRole: editRole,
       });
       showEditModal = false;
-      toastMessage = `Role updated to ${roleLabels[editRole]}`;
-      toastType = 'success';
+      addToast('success', `Role updated to ${roleLabels[editRole]}`);
     } catch (err) {
-      toastMessage = `Failed: ${(err as Error).message}`;
-      toastType = 'error';
+      addToast('error', `Failed: ${(err as Error).message}`);
     } finally {
       actionLoading = false;
     }
@@ -86,11 +80,9 @@
     if (!confirm('Deactivate this user? They will lose access immediately.')) return;
     try {
       await mutation('users:deactivateUser', { userId });
-      toastMessage = 'User deactivated';
-      toastType = 'success';
+      addToast('success', 'User deactivated');
     } catch (err) {
-      toastMessage = `Failed: ${(err as Error).message}`;
-      toastType = 'error';
+      addToast('error', `Failed: ${(err as Error).message}`);
     }
   }
 </script>
@@ -232,9 +224,3 @@
     </div>
   {/if}
 </Modal>
-
-{#if toastMessage}
-  <div class="fixed bottom-4 right-4 z-50">
-    <Toast type={toastType} message={toastMessage} />
-  </div>
-{/if}

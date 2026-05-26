@@ -8,7 +8,7 @@
     ClipboardCheck,
     FileText,
     ShieldAlert,
-    KanbanSquare,
+    Kanban,
     BarChart3,
     Users,
     Settings,
@@ -49,7 +49,7 @@
     },
     {
       label: 'Tasks',
-      icon: KanbanSquare,
+      icon: Kanban,
       href: '/app/my-tasks',
       roles: ['admin', 'project_manager', 'field_engineer', 'architect'],
     },

@@ -47,14 +47,14 @@
 
 ### Target Users
 
-| Role | Access Level |
-|------|-------------|
-| **Admin** | Full system access, user management, all projects |
-| **Project Manager** | Cross-module oversight, board configuration, reports |
-| **Procurement Officer** | Delivery tracking, material ordering, supplier management |
+| Role                            | Access Level                                                          |
+| ------------------------------- | --------------------------------------------------------------------- |
+| **Admin**                       | Full system access, user management, all projects                     |
+| **Project Manager**             | Cross-module oversight, board configuration, reports                  |
+| **Procurement Officer**         | Delivery tracking, material ordering, supplier management             |
 | **Architect / Design Engineer** | Blueprint uploads, revision management, inspection checklist creation |
-| **Field Engineer** | Daily execution: start inspections, confirm deliveries, move tasks |
-| **HSE Officer** | Safety permits, zone management, compliance monitoring |
+| **Field Engineer**              | Daily execution: start inspections, confirm deliveries, move tasks    |
+| **HSE Officer**                 | Safety permits, zone management, compliance monitoring                |
 
 ### Key Differentiators
 
@@ -150,13 +150,13 @@ convex/
 
 Track materials from order to site receipt in real-time.
 
-| Feature | Implementation |
-|---------|---------------|
-| **Status workflow** | `ordered → dispatched → in_transit → on_site → received_inspected` with validated state transitions |
-| **Interactive map** | Leaflet with OpenStreetMap — truck markers with heading rotation, simulated GPS movement |
+| Feature                  | Implementation                                                                                                            |
+| ------------------------ | ------------------------------------------------------------------------------------------------------------------------- |
+| **Status workflow**      | `ordered → dispatched → in_transit → on_site → received_inspected` with validated state transitions                       |
+| **Interactive map**      | Leaflet with OpenStreetMap — truck markers with heading rotation, simulated GPS movement                                  |
 | **Receipt confirmation** | Camera capture (mobile `capture="environment"`), canvas-based signature pad (mouse + touch), mutation-backed confirmation |
-| **Filter tabs** | All / Ordered / In Transit / On Site / Received with count badges |
-| **Real-time updates** | ETA changes, status transitions, receipt confirmations push instantly to all viewers |
+| **Filter tabs**          | All / Ordered / In Transit / On Site / Received with count badges                                                         |
+| **Real-time updates**    | ETA changes, status transitions, receipt confirmations push instantly to all viewers                                      |
 
 **Status: Complete** ✅
 
@@ -164,14 +164,14 @@ Track materials from order to site receipt in real-time.
 
 Digital checklist workflow with full audit trail.
 
-| Feature | Implementation |
-|---------|---------------|
-| **Checklist management** | Pass/fail toggle per item, required items marked with asterisk |
-| **Notes & photos** | Debounced notes (500ms), camera capture stored as data URLs in checklist item |
-| **Progress tracking** | Real-time progress bar with percentage and item count |
-| **Audit trail** | Timestamped action log with user initials, action description, and detail |
-| **Completion flow** | Three outcome options: Passed / Remedial / Failed with commit summary |
-| **PDF generation** | Server-side endpoint (`/api/inspection-summary/[projectId]`) via `pdf-lib` |
+| Feature                  | Implementation                                                                |
+| ------------------------ | ----------------------------------------------------------------------------- |
+| **Checklist management** | Pass/fail toggle per item, required items marked with asterisk                |
+| **Notes & photos**       | Debounced notes (500ms), camera capture stored as data URLs in checklist item |
+| **Progress tracking**    | Real-time progress bar with percentage and item count                         |
+| **Audit trail**          | Timestamped action log with user initials, action description, and detail     |
+| **Completion flow**      | Three outcome options: Passed / Remedial / Failed with commit summary         |
+| **PDF generation**       | Server-side endpoint (`/api/inspection-summary/[projectId]`) via `pdf-lib`    |
 
 **Status: Complete** ✅
 
@@ -179,14 +179,14 @@ Digital checklist workflow with full audit trail.
 
 Version-controlled drawing management with deep-zoom viewing.
 
-| Feature | Implementation |
-|---------|---------------|
-| **Deep-zoom viewer** | OpenSeadragon — free, open-source, supports gigapixel images |
+| Feature              | Implementation                                                   |
+| -------------------- | ---------------------------------------------------------------- |
+| **Deep-zoom viewer** | OpenSeadragon — free, open-source, supports gigapixel images     |
 | **Revision history** | Versioned revisions with change logs, revision selector dropdown |
-| **Status workflow** | `draft → in_review → approved → for_construction` |
-| **Zoom controls** | In/out/reset/fullscreen with zoom level display |
-| **Navigator panel** | OpenSeadragon built-in minimap for orientation |
-| **Change orders** | Linked change order management with approve/reject workflow |
+| **Status workflow**  | `draft → in_review → approved → for_construction`                |
+| **Zoom controls**    | In/out/reset/fullscreen with zoom level display                  |
+| **Navigator panel**  | OpenSeadragon built-in minimap for orientation                   |
+| **Change orders**    | Linked change order management with approve/reject workflow      |
 
 **Backend actions:** `convertPdfToPages` (PDF-to-image via `pdfjs-dist`) and `autoTagInspectionPhoto` (Gemini AI for photo defect detection).
 
@@ -196,13 +196,13 @@ Version-controlled drawing management with deep-zoom viewing.
 
 Zone-based safety management with visual floor plan.
 
-| Feature | Implementation |
-|---------|---------------|
-| **SVG floor plan** | Zone paths rendered as SVG with color-coded fill (green=active, red=suspended, gray=completed) |
-| **Interactive zones** | Click to view permits, hover for tooltip with zone info |
-| **Permit management** | 5 permit types (hot work, confined space, height work, electrical, general) with expiring-warning indicators |
-| **Auto-expiry** | Hourly cron job expires permits, broadcasts changes |
-| **Cross-module blocking** | Zone suspension automatically moves linked Kanban cards to "blocked" with the suspension reason |
+| Feature                   | Implementation                                                                                               |
+| ------------------------- | ------------------------------------------------------------------------------------------------------------ |
+| **SVG floor plan**        | Zone paths rendered as SVG with color-coded fill (green=active, red=suspended, gray=completed)               |
+| **Interactive zones**     | Click to view permits, hover for tooltip with zone info                                                      |
+| **Permit management**     | 5 permit types (hot work, confined space, height work, electrical, general) with expiring-warning indicators |
+| **Auto-expiry**           | Hourly cron job expires permits, broadcasts changes                                                          |
+| **Cross-module blocking** | Zone suspension automatically moves linked Kanban cards to "blocked" with the suspension reason              |
 
 **Status: Complete** ✅
 
@@ -210,14 +210,14 @@ Zone-based safety management with visual floor plan.
 
 Drag-and-drop project task board with real-time sync.
 
-| Feature | Implementation |
-|---------|---------------|
-| **6 default columns** | Backlog → Ready → In Progress → QC → Done → Blocked |
-| **Drag & drop** | Native HTML5 drag-and-drop with Vue TransitionGroup animations |
-| **Priorities** | 4 levels (low/medium/high/critical) with color-coded badges |
-| **Cross-linking** | Cards can link to deliveries, inspections, and blueprints |
-| **My Tasks filter** | Toggle to show only cards assigned to current user |
-| **Daily logs** | 24h scheduled job generates per-project daily summaries of task movements, deliveries received, and inspections completed |
+| Feature               | Implementation                                                                                                            |
+| --------------------- | ------------------------------------------------------------------------------------------------------------------------- |
+| **6 default columns** | Backlog → Ready → In Progress → QC → Done → Blocked                                                                       |
+| **Drag & drop**       | Native HTML5 drag-and-drop with Vue TransitionGroup animations                                                            |
+| **Priorities**        | 4 levels (low/medium/high/critical) with color-coded badges                                                               |
+| **Cross-linking**     | Cards can link to deliveries, inspections, and blueprints                                                                 |
+| **My Tasks filter**   | Toggle to show only cards assigned to current user                                                                        |
+| **Daily logs**        | 24h scheduled job generates per-project daily summaries of task movements, deliveries received, and inspections completed |
 
 **Status: Complete** ✅
 
@@ -237,52 +237,52 @@ Drag-and-drop project task board with real-time sync.
 
 ### Core
 
-| Technology | Version | Purpose |
-|-----------|---------|---------|
-| **SvelteKit** | 5 + Svelte 5 | SSR, routing, layouts, server endpoints, data loading |
-| **Vue 3** | ^3.5 | Rich interactive widgets (micro-frontends) |
-| **Convex** | ^1.39 | Backend: database, real-time sync, file storage, scheduled jobs, serverless functions |
-| **TypeScript** | ^5.8 | Strict mode, full type safety across the monorepo |
-| **pnpm** | ^10 | Monorepo workspace management with content-addressable storage |
+| Technology     | Version      | Purpose                                                                               |
+| -------------- | ------------ | ------------------------------------------------------------------------------------- |
+| **SvelteKit**  | 5 + Svelte 5 | SSR, routing, layouts, server endpoints, data loading                                 |
+| **Vue 3**      | ^3.5         | Rich interactive widgets (micro-frontends)                                            |
+| **Convex**     | ^1.39        | Backend: database, real-time sync, file storage, scheduled jobs, serverless functions |
+| **TypeScript** | ^5.8         | Strict mode, full type safety across the monorepo                                     |
+| **pnpm**       | ^10          | Monorepo workspace management with content-addressable storage                        |
 
 ### Frontend
 
-| Technology | Purpose |
-|-----------|---------|
-| **Tailwind CSS v4** | Utility-first styling with `@theme inline` design tokens |
+| Technology                  | Purpose                                                         |
+| --------------------------- | --------------------------------------------------------------- |
+| **Tailwind CSS v4**         | Utility-first styling with `@theme inline` design tokens        |
 | **shadcn-svelte** (bits-ui) | Accessible UI primitives (Button, Card, Modal, DataTable, etc.) |
-| **Lucide** | Consistent icon library |
-| **mode-watcher** | Dark mode class-based toggling |
-| **clsx + tailwind-merge** | Conditional class merging utility |
-| **Leaflet + OpenStreetMap** | Free map rendering (no API key required) |
-| **OpenSeadragon** | Deep-zoom image viewer for blueprints |
-| **Chart.js** | Analytics dashboard charts |
-| **Inter (Google Fonts)** | System font — modern, highly readable |
+| **Lucide**                  | Consistent icon library                                         |
+| **mode-watcher**            | Dark mode class-based toggling                                  |
+| **clsx + tailwind-merge**   | Conditional class merging utility                               |
+| **Leaflet + OpenStreetMap** | Free map rendering (no API key required)                        |
+| **OpenSeadragon**           | Deep-zoom image viewer for blueprints                           |
+| **Chart.js**                | Analytics dashboard charts                                      |
+| **Inter (Google Fonts)**    | System font — modern, highly readable                           |
 
 ### Backend (Convex)
 
-| Capability | Implementation |
-|-----------|---------------|
-| **Database** | 13 tables with schema validation via `convex/values` validators |
-| **Real-time** | `onUpdate()` subscriptions — push-based, no polling |
-| **Auth** | Better Auth with magic link + 6 user roles |
-| **File storage** | Convex `storage.store()` for blueprint files and inspection photos |
-| **Scheduled jobs** | Cron-based hourly/daily job execution |
-| **Serverless functions** | Queries, mutations, and actions — auto-scaling |
+| Capability               | Implementation                                                     |
+| ------------------------ | ------------------------------------------------------------------ |
+| **Database**             | 13 tables with schema validation via `convex/values` validators    |
+| **Real-time**            | `onUpdate()` subscriptions — push-based, no polling                |
+| **Auth**                 | Better Auth with magic link + 6 user roles                         |
+| **File storage**         | Convex `storage.store()` for blueprint files and inspection photos |
+| **Scheduled jobs**       | Cron-based hourly/daily job execution                              |
+| **Serverless functions** | Queries, mutations, and actions — auto-scaling                     |
 
 ### DevOps
 
-| Technology | Purpose |
-|-----------|---------|
-| **Docker** | Multi-stage production build (deps → builder → runner) |
-| **K3s** | Lightweight Kubernetes for deployment |
-| **ArgoCD** | GitOps deployment with automated sync |
-| **Terraform (OCI)** | Oracle Cloud free tier infrastructure provisioning |
-| **Prometheus** | Metrics collection from `/metrics` endpoint |
-| **Grafana** | Pre-configured dashboards + alerting |
-| **GitHub Actions** | CI/CD with parallel builds, security scanning, SBOM generation |
-| **Trivy** | Vulnerability scanning (filesystem + container image) |
-| **CodeQL** | Code quality and security analysis |
+| Technology          | Purpose                                                        |
+| ------------------- | -------------------------------------------------------------- |
+| **Docker**          | Multi-stage production build (deps → builder → runner)         |
+| **K3s**             | Lightweight Kubernetes for deployment                          |
+| **ArgoCD**          | GitOps deployment with automated sync                          |
+| **Terraform (OCI)** | Oracle Cloud free tier infrastructure provisioning             |
+| **Prometheus**      | Metrics collection from `/metrics` endpoint                    |
+| **Grafana**         | Pre-configured dashboards + alerting                           |
+| **GitHub Actions**  | CI/CD with parallel builds, security scanning, SBOM generation |
+| **Trivy**           | Vulnerability scanning (filesystem + container image)          |
+| **CodeQL**          | Code quality and security analysis                             |
 
 ---
 
@@ -437,17 +437,17 @@ GEMINI_API_KEY=your-gemini-api-key
 
 ### Available Scripts
 
-| Script | Description |
-|--------|-------------|
-| `pnpm dev` | Start SvelteKit dev server on port 3000 |
-| `pnpm build` | Build SvelteKit for production |
-| `pnpm build:widgets` | Build all 5 Vue widget libraries |
-| `pnpm build:all` | Build widgets + SvelteKit (full production build) |
-| `pnpm preview` | Preview production build locally |
-| `pnpm lint` | Run Prettier check on SvelteKit |
-| `pnpm check` | Run svelte-check (type + lint validation) |
-| `pnpm test` | Run Vitest smoke tests (design-tokens) |
-| `pnpm format` | Format all files with Prettier |
+| Script               | Description                                       |
+| -------------------- | ------------------------------------------------- |
+| `pnpm dev`           | Start SvelteKit dev server on port 3000           |
+| `pnpm build`         | Build SvelteKit for production                    |
+| `pnpm build:widgets` | Build all 5 Vue widget libraries                  |
+| `pnpm build:all`     | Build widgets + SvelteKit (full production build) |
+| `pnpm preview`       | Preview production build locally                  |
+| `pnpm lint`          | Run Prettier check on SvelteKit                   |
+| `pnpm check`         | Run svelte-check (type + lint validation)         |
+| `pnpm test`          | Run Vitest smoke tests (design-tokens)            |
+| `pnpm format`        | Format all files with Prettier                    |
 
 ---
 
@@ -578,12 +578,20 @@ import { getConvexClient } from '@sitesync/convex-vue-client';
 
 export function mountDeliveryTracker(
   container: HTMLElement,
-  props: { convexUrl: string; projectId: string; userId: string; userRole: string; deliveryId?: string }
+  props: {
+    convexUrl: string;
+    projectId: string;
+    userId: string;
+    userRole: string;
+    deliveryId?: string;
+  },
 ) {
   const client = getConvexClient(props.convexUrl);
   const app = createApp(DeliveryTrackerWidget, { ...props, client });
   const instance = app.mount(container);
-  return () => { app.unmount(); };
+  return () => {
+    app.unmount();
+  };
 }
 ```
 
@@ -591,16 +599,16 @@ export function mountDeliveryTracker(
 
 `@sitesync/convex-vue-client` provides:
 
-| Export | Description |
-|--------|-------------|
-| `getConvexClient(url)` | Singleton ConvexClient factory |
-| `useConvexQuery(client, name, args)` | Reactive query subscription (auto-unsubscribe on unmount). Accepts both `FunctionReference` (typed) and `string` (for widgets). |
-| `useMutation(client, name)` | Typed mutation wrapper |
-| `useOptimisticMutation(client, name)` | Mutation with optimistic update support |
-| `typedMutation(client, name, args)` | Type-safe mutation with args validation |
-| `typedQuery(client, name, args, callback)` | Type-safe query subscription |
-| `ConvexMutation` / `ConvexQuery` | Union type of all known mutation/query names |
-| `MutationArgs` / `QueryArgs` | Args type map for all mutations/queries |
+| Export                                     | Description                                                                                                                     |
+| ------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------- |
+| `getConvexClient(url)`                     | Singleton ConvexClient factory                                                                                                  |
+| `useConvexQuery(client, name, args)`       | Reactive query subscription (auto-unsubscribe on unmount). Accepts both `FunctionReference` (typed) and `string` (for widgets). |
+| `useMutation(client, name)`                | Typed mutation wrapper                                                                                                          |
+| `useOptimisticMutation(client, name)`      | Mutation with optimistic update support                                                                                         |
+| `typedMutation(client, name, args)`        | Type-safe mutation with args validation                                                                                         |
+| `typedQuery(client, name, args, callback)` | Type-safe query subscription                                                                                                    |
+| `ConvexMutation` / `ConvexQuery`           | Union type of all known mutation/query names                                                                                    |
+| `MutationArgs` / `QueryArgs`               | Args type map for all mutations/queries                                                                                         |
 
 ---
 
@@ -651,14 +659,14 @@ User → /login → enters email → magic link sent → clicks link → session
 
 ### Role-Based Access Control (6 Roles)
 
-| Role | Abbreviation | Access |
-|------|-------------|--------|
-| `admin` | ADMIN | Full system access, user management |
-| `project_manager` | PM | Cross-module oversight, board config |
-| `procurement` | PROC | Delivery management, material ordering |
-| `architect` | ARCH | Blueprint uploads, inspection checklists |
-| `field_engineer` | FE | Daily execution tasks |
-| `hse_officer` | HSE | Safety permits, zone management |
+| Role              | Abbreviation | Access                                   |
+| ----------------- | ------------ | ---------------------------------------- |
+| `admin`           | ADMIN        | Full system access, user management      |
+| `project_manager` | PM           | Cross-module oversight, board config     |
+| `procurement`     | PROC         | Delivery management, material ordering   |
+| `architect`       | ARCH         | Blueprint uploads, inspection checklists |
+| `field_engineer`  | FE           | Daily execution tasks                    |
+| `hse_officer`     | HSE          | Safety permits, zone management          |
 
 ### Backend Security Middleware
 
@@ -690,65 +698,65 @@ ctx → requireAuth() → requireRole([...]) → validateStatusTransition() → 
 
 Each query is available via `client.onUpdate(queryName, args, callback)`.
 
-| Module | Query | Args | Purpose |
-|--------|-------|------|---------|
-| **Deliveries** | `listByProject` | `{ projectId }` | All deliveries for a project |
-| | `getById` | `{ deliveryId }` | Single delivery with full details |
-| | `listByStatus` | `{ projectId, status }` | Filtered delivery list |
-| | `getActiveDeliveries` | `{ projectId }` | Non-received deliveries sorted by urgency |
-| | `getDeliveryCounts` | `{ projectId }` | Aggregated counts (active, inTransit, received) |
-| **Inspections** | `listByProject` | `{ projectId }` | All inspections |
-| | `getById` | `{ inspectionId }` | Single inspection with checklist + audit trail |
-| | `listByAssignee` | `{ assigneeId }` | Inspections assigned to user |
-| | `getCounts` | `{ projectId }` | Aggregated counts (pending, passed, failed) |
-| **Blueprints** | `listByProject` | `{ projectId }` | All blueprints |
-| | `getById` | `{ blueprintId }` | Single blueprint with latest revision |
-| | `getRevisions` | `{ blueprintId }` | Revision history |
-| | `getLatestRevision` | `{ blueprintId }` | Most recent file |
-| | `listChangeOrders` | `{ projectId }` | All change orders |
-| **Permits** | `listByProject` | `{ projectId }` | All permits |
-| | `listByZone` | `{ zoneId }` | Permits for a specific zone |
-| | `listExpiring` | `{ hoursThreshold? }` | Permits expiring soon |
-| | `listZonesByProject` | `{ projectId }` | All work zones |
-| | `getZoneById` | `{ zoneId }` | Single zone |
-| | `getPermitStats` | `{ projectId }` | Zone/permit statistics |
-| **Kanban** | `getBoardByProject` | `{ projectId }` | Board with columns |
-| | `getBoardById` | `{ boardId }` | Single board |
-| | `getCardsByBoard` | `{ boardId }` | All cards, ordered by column+order |
-| | `getCardsByColumn` | `{ boardId, columnId }` | Cards in one column |
-| | `getMyTasks` | `{ userId, projectId }` | Cards assigned to user |
-| | `getCardById` | `{ cardId }` | Single card |
+| Module          | Query                 | Args                    | Purpose                                         |
+| --------------- | --------------------- | ----------------------- | ----------------------------------------------- |
+| **Deliveries**  | `listByProject`       | `{ projectId }`         | All deliveries for a project                    |
+|                 | `getById`             | `{ deliveryId }`        | Single delivery with full details               |
+|                 | `listByStatus`        | `{ projectId, status }` | Filtered delivery list                          |
+|                 | `getActiveDeliveries` | `{ projectId }`         | Non-received deliveries sorted by urgency       |
+|                 | `getDeliveryCounts`   | `{ projectId }`         | Aggregated counts (active, inTransit, received) |
+| **Inspections** | `listByProject`       | `{ projectId }`         | All inspections                                 |
+|                 | `getById`             | `{ inspectionId }`      | Single inspection with checklist + audit trail  |
+|                 | `listByAssignee`      | `{ assigneeId }`        | Inspections assigned to user                    |
+|                 | `getCounts`           | `{ projectId }`         | Aggregated counts (pending, passed, failed)     |
+| **Blueprints**  | `listByProject`       | `{ projectId }`         | All blueprints                                  |
+|                 | `getById`             | `{ blueprintId }`       | Single blueprint with latest revision           |
+|                 | `getRevisions`        | `{ blueprintId }`       | Revision history                                |
+|                 | `getLatestRevision`   | `{ blueprintId }`       | Most recent file                                |
+|                 | `listChangeOrders`    | `{ projectId }`         | All change orders                               |
+| **Permits**     | `listByProject`       | `{ projectId }`         | All permits                                     |
+|                 | `listByZone`          | `{ zoneId }`            | Permits for a specific zone                     |
+|                 | `listExpiring`        | `{ hoursThreshold? }`   | Permits expiring soon                           |
+|                 | `listZonesByProject`  | `{ projectId }`         | All work zones                                  |
+|                 | `getZoneById`         | `{ zoneId }`            | Single zone                                     |
+|                 | `getPermitStats`      | `{ projectId }`         | Zone/permit statistics                          |
+| **Kanban**      | `getBoardByProject`   | `{ projectId }`         | Board with columns                              |
+|                 | `getBoardById`        | `{ boardId }`           | Single board                                    |
+|                 | `getCardsByBoard`     | `{ boardId }`           | All cards, ordered by column+order              |
+|                 | `getCardsByColumn`    | `{ boardId, columnId }` | Cards in one column                             |
+|                 | `getMyTasks`          | `{ userId, projectId }` | Cards assigned to user                          |
+|                 | `getCardById`         | `{ cardId }`            | Single card                                     |
 
 ### Mutation Functions
 
 Each mutation is available via `client.mutation(mutationName, args)` or typed helpers.
 
-| Module | Mutation | Key Args | Role Required |
-|--------|----------|----------|---------------|
-| **Deliveries** | `create` | `{ projectId, title, supplier, materialList, eta }` | procurement, admin |
-| | `updateStatus` | `{ deliveryId, newStatus }` | procurement, admin |
-| | `confirmReceipt` | `{ deliveryId, receiptPhoto?, signature? }` | field_engineer, admin |
-| | `updateEta` | `{ deliveryId, eta }` | procurement |
-| | `remove` | `{ deliveryId }` | admin |
-| **Inspections** | `create` | `{ projectId, title, checklist }` | architect |
-| | `startInspection` | `{ inspectionId }` | field_engineer |
-| | `updateChecklistItem` | `{ inspectionId, itemIndex, passed?, notes?, photoIds? }` | field_engineer |
-| | `completeInspection` | `{ inspectionId, status }` | field_engineer |
-| **Blueprints** | `create` | `{ projectId, title, description? }` | architect, admin |
-| | `uploadNewRevision` | `{ blueprintId, fileStorageId, changeLog? }` | architect |
-| | `updateStatus` | `{ blueprintId, newStatus }` | architect, pm |
-| | `createChangeOrder` | `{ blueprintId, projectId, title, description }` | architect, pm |
-| | `approveChangeOrder` | `{ changeOrderId }` | architect, pm |
-| **Permits** | `createPermit` | Various | hse_officer |
-| | `activatePermit` | `{ permitId }` | hse_officer |
-| | `suspendZone` | `{ zoneId, reason }` | hse_officer |
-| | `reactivateZone` | `{ zoneId }` | hse_officer |
-| | `createZone` | `{ projectId, name, svgPath }` | hse_officer, admin |
-| **Kanban** | `createBoard` | `{ projectId, title }` | pm, admin |
-| | `createCard` | `{ boardId, title, priority, description?, assigneeId? }` | all roles |
-| | `moveCard` | `{ cardId, columnId, order? }` | all roles |
-| | `updateCard` | Various | all roles |
-| | `deleteCard` | `{ cardId }` | pm, admin |
+| Module          | Mutation              | Key Args                                                  | Role Required         |
+| --------------- | --------------------- | --------------------------------------------------------- | --------------------- |
+| **Deliveries**  | `create`              | `{ projectId, title, supplier, materialList, eta }`       | procurement, admin    |
+|                 | `updateStatus`        | `{ deliveryId, newStatus }`                               | procurement, admin    |
+|                 | `confirmReceipt`      | `{ deliveryId, receiptPhoto?, signature? }`               | field_engineer, admin |
+|                 | `updateEta`           | `{ deliveryId, eta }`                                     | procurement           |
+|                 | `remove`              | `{ deliveryId }`                                          | admin                 |
+| **Inspections** | `create`              | `{ projectId, title, checklist }`                         | architect             |
+|                 | `startInspection`     | `{ inspectionId }`                                        | field_engineer        |
+|                 | `updateChecklistItem` | `{ inspectionId, itemIndex, passed?, notes?, photoIds? }` | field_engineer        |
+|                 | `completeInspection`  | `{ inspectionId, status }`                                | field_engineer        |
+| **Blueprints**  | `create`              | `{ projectId, title, description? }`                      | architect, admin      |
+|                 | `uploadNewRevision`   | `{ blueprintId, fileStorageId, changeLog? }`              | architect             |
+|                 | `updateStatus`        | `{ blueprintId, newStatus }`                              | architect, pm         |
+|                 | `createChangeOrder`   | `{ blueprintId, projectId, title, description }`          | architect, pm         |
+|                 | `approveChangeOrder`  | `{ changeOrderId }`                                       | architect, pm         |
+| **Permits**     | `createPermit`        | Various                                                   | hse_officer           |
+|                 | `activatePermit`      | `{ permitId }`                                            | hse_officer           |
+|                 | `suspendZone`         | `{ zoneId, reason }`                                      | hse_officer           |
+|                 | `reactivateZone`      | `{ zoneId }`                                              | hse_officer           |
+|                 | `createZone`          | `{ projectId, name, svgPath }`                            | hse_officer, admin    |
+| **Kanban**      | `createBoard`         | `{ projectId, title }`                                    | pm, admin             |
+|                 | `createCard`          | `{ boardId, title, priority, description?, assigneeId? }` | all roles             |
+|                 | `moveCard`            | `{ cardId, columnId, order? }`                            | all roles             |
+|                 | `updateCard`          | Various                                                   | all roles             |
+|                 | `deleteCard`          | `{ cardId }`                                              | pm, admin             |
 
 ---
 
@@ -770,6 +778,7 @@ docker run -p 3000:3000 \
 ```
 
 The image includes:
+
 - **Health check** — HTTP GET `/health` every 30s
 - **Non-root user** — Runs as `svelte:1001` with `runAsNonRoot`
 - **OCI labels** — Standard metadata annotations
@@ -783,6 +792,7 @@ docker compose up
 ```
 
 Spins up:
+
 - **SvelteKit** — App on port 3000
 - **Prometheus** — Metrics on port 9090
 - **Grafana** — Dashboards on port 3001 (admin/sitesync)
@@ -790,6 +800,7 @@ Spins up:
 ### Kubernetes (K3s + ArgoCD)
 
 1. **Provision infrastructure** via Terraform (Oracle Cloud free tier):
+
    ```bash
    cd terraform
    terraform init
@@ -808,13 +819,13 @@ Spins up:
 
 ### Environment Variables (Production)
 
-| Variable | Source | Required |
-|----------|--------|----------|
-| `CONVEX_URL` | Convex dashboard | ✅ |
-| `BETTER_AUTH_SECRET` | `openssl rand -hex 32` | ✅ |
-| `BETTER_AUTH_URL` | Deployment URL | ✅ |
-| `NODE_ENV` | `production` | ✅ |
-| `PORT` | `3000` | ✅ |
+| Variable             | Source                 | Required |
+| -------------------- | ---------------------- | -------- |
+| `CONVEX_URL`         | Convex dashboard       | ✅       |
+| `BETTER_AUTH_SECRET` | `openssl rand -hex 32` | ✅       |
+| `BETTER_AUTH_URL`    | Deployment URL         | ✅       |
+| `NODE_ENV`           | `production`           | ✅       |
+| `PORT`               | `3000`                 | ✅       |
 
 ---
 
@@ -824,11 +835,11 @@ Spins up:
 
 Available at `/metrics` endpoint on the SvelteKit server:
 
-| Metric | Type | Description |
-|--------|------|-------------|
-| `sitesync_active_users` | Gauge | Currently logged-in users |
-| `sitesync_open_tasks` | Gauge | Tasks not in "Done" column |
-| `sitesync_expiring_permits` | Gauge | Permits expiring within 24h |
+| Metric                          | Type      | Description                                           |
+| ------------------------------- | --------- | ----------------------------------------------------- |
+| `sitesync_active_users`         | Gauge     | Currently logged-in users                             |
+| `sitesync_open_tasks`           | Gauge     | Tasks not in "Done" column                            |
+| `sitesync_expiring_permits`     | Gauge     | Permits expiring within 24h                           |
 | `sitesync_delivery_delay_hours` | Histogram | Delivery delay distribution (buckets: 1,4,8,24,48,72) |
 
 ### Grafana Dashboard
@@ -845,12 +856,12 @@ A pre-configured **"Site Health"** dashboard is provisioned at `docker/grafana/d
 
 PrometheusRules configured at `kubernetes/prometheus-rules.yaml`:
 
-| Rule | Condition | Severity |
-|------|-----------|----------|
-| `HighErrorRate` | >5% errors over 5 minutes | critical |
-| `HighLatency` | p99 latency > 2s | warning |
-| `PodCrashLooping` | Pod restart count > 3 | critical |
-| `HighMemoryUsage` | Memory > 85% | warning |
+| Rule              | Condition                 | Severity |
+| ----------------- | ------------------------- | -------- |
+| `HighErrorRate`   | >5% errors over 5 minutes | critical |
+| `HighLatency`     | p99 latency > 2s          | warning  |
+| `PodCrashLooping` | Pod restart count > 3     | critical |
+| `HighMemoryUsage` | Memory > 85%              | warning  |
 
 Grafana alerting contact points support email and Slack webhook notifications.
 
@@ -893,6 +904,7 @@ Push/PR to main
 ```
 
 **Key security features**:
+
 - Trivy scans both filesystem and final Docker image
 - CodeQL `security-and-quality` query suite
 - SBOM attached to every build as a downloadable artifact
@@ -904,11 +916,13 @@ Push/PR to main
 ## Roadmap
 
 ### In Progress
+
 - [ ] End-to-end tests (Playwright)
 - [ ] Optimistic update patterns in Vue widgets
 - [ ] Offline mutation queue (indexedDB-backed)
 
 ### Planned
+
 - [ ] Mobile push notifications (Web Push API)
 - [ ] Real-time collaborative editing for inspection notes
 - [ ] Advanced filtering and saved views across all modules
@@ -917,6 +931,7 @@ Push/PR to main
 - [ ] Webhook integration for external system notifications
 
 ### Future
+
 - [ ] Native mobile app (via Capacitor or Tauri)
 - [ ] BIM model viewer (Three.js integration)
 - [ ] AI-powered schedule optimization

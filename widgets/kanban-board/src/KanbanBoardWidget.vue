@@ -176,9 +176,14 @@ function getEmptyState(columnId: string) {
 <template>
   <div class="kanban-board">
     <!-- Loading state -->
-    <div v-if="loading || boardLoading || cardsLoading" class="flex items-center justify-center py-16">
+    <div
+      v-if="loading || boardLoading || cardsLoading"
+      class="flex items-center justify-center py-16"
+    >
       <div class="flex flex-col items-center gap-2">
-        <div class="h-8 w-8 animate-spin rounded-full border-2 border-blue-600 border-t-transparent" />
+        <div
+          class="h-8 w-8 animate-spin rounded-full border-2 border-blue-600 border-t-transparent"
+        />
         <p class="text-sm text-gray-500">Loading board...</p>
       </div>
     </div>
@@ -187,88 +192,137 @@ function getEmptyState(columnId: string) {
     <div v-else>
       <!-- Toolbar -->
       <div class="mb-4 flex items-center justify-between">
-        <h3 class="text-sm font-semibold text-muted-foreground">{{ safeBoard?.title || 'Kanban Board' }}</h3>
+        <h3 class="text-muted-foreground text-sm font-semibold">
+          {{ safeBoard?.title || 'Kanban Board' }}
+        </h3>
         <div class="flex items-center gap-2">
-          <label class="flex items-center gap-1.5 text-xs text-muted-foreground cursor-pointer">
-            <input type="checkbox" v-model="filterMine" class="h-3.5 w-3.5 rounded border-gray-300 text-blue-600 focus:ring-blue-500" />
+          <label class="text-muted-foreground flex cursor-pointer items-center gap-1.5 text-xs">
+            <input
+              type="checkbox"
+              v-model="filterMine"
+              class="h-3.5 w-3.5 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+            />
             My tasks only
           </label>
-          <span class="text-xs text-muted-foreground">
-            {{ filteredCards.length }} cards
-          </span>
+          <span class="text-muted-foreground text-xs"> {{ filteredCards.length }} cards </span>
         </div>
       </div>
 
       <!-- Board columns -->
-      <div v-if="columns.length > 0" class="flex gap-4 overflow-x-auto pb-4" style="scrollbar-width: thin;">
-        <div v-for="col in columns" :key="col.id"
-          class="min-w-[270px] max-w-[320px] flex-shrink-0"
+      <div
+        v-if="columns.length > 0"
+        class="flex gap-4 overflow-x-auto pb-4"
+        style="scrollbar-width: thin"
+      >
+        <div
+          v-for="col in columns"
+          :key="col.id"
+          class="max-w-[320px] min-w-[270px] flex-shrink-0"
           @dragover.prevent="onDragOver(col.id)"
           @dragleave="onDragLeave(col.id)"
-          @drop="onDrop(col.id)">
+          @drop="onDrop(col.id)"
+        >
           <!-- Column header -->
           <div class="mb-2 flex items-center justify-between px-1">
             <h4 class="text-sm font-semibold text-gray-700 dark:text-gray-300">{{ col.title }}</h4>
-            <span class="inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-gray-100 px-1.5 text-xs font-medium text-gray-600 dark:bg-gray-700 dark:text-gray-300">
+            <span
+              class="inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-gray-100 px-1.5 text-xs font-medium text-gray-600 dark:bg-gray-700 dark:text-gray-300"
+            >
               {{ cardsByColumn[col.id]?.length || 0 }}
             </span>
           </div>
 
           <!-- Column body -->
-          <div class="min-h-[200px] space-y-2 rounded-lg p-2 transition-colors"
+          <div
+            class="min-h-[200px] space-y-2 rounded-lg p-2 transition-colors"
             :class="[
-              dragOverColumn === col.id ? 'bg-blue-50 ring-2 ring-blue-200 dark:bg-blue-900/20 dark:ring-blue-700' : 'bg-gray-50 dark:bg-gray-800/50',
-            ]">
-
+              dragOverColumn === col.id
+                ? 'bg-blue-50 ring-2 ring-blue-200 dark:bg-blue-900/20 dark:ring-blue-700'
+                : 'bg-gray-50 dark:bg-gray-800/50',
+            ]"
+          >
             <!-- Cards with transition -->
             <TransitionGroup name="card" tag="div" class="space-y-2">
-              <div v-for="card in cardsByColumn[col.id]" :key="card._id"
+              <div
+                v-for="card in cardsByColumn[col.id]"
+                :key="card._id"
                 draggable="true"
                 @dragstart="onDragStart(card)"
                 @dragend="onDragEnd"
                 class="cursor-grab rounded-lg border border-gray-200 bg-white shadow-sm transition-all hover:shadow-md active:cursor-grabbing dark:border-gray-700 dark:bg-gray-900"
                 :class="[
                   priorityBorders[card.priority] || 'border-l-gray-400',
-                  draggingCard?._id === card._id ? 'opacity-50 shadow-lg rotate-2' : '',
+                  draggingCard?._id === card._id ? 'rotate-2 opacity-50 shadow-lg' : '',
                   card.blockedReason ? 'border-red-300 dark:border-red-700' : '',
-                ]">
-
+                ]"
+              >
                 <!-- Card content -->
                 <div class="p-3">
                   <div class="flex items-start justify-between gap-2">
-                    <p class="text-sm font-medium text-gray-900 dark:text-gray-100">{{ card.title }}</p>
-                    <span class="shrink-0 rounded px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider"
-                      :class="priorityColors[card.priority]">
+                    <p class="text-sm font-medium text-gray-900 dark:text-gray-100">
+                      {{ card.title }}
+                    </p>
+                    <span
+                      class="shrink-0 rounded px-1.5 py-0.5 text-[10px] font-semibold tracking-wider uppercase"
+                      :class="priorityColors[card.priority]"
+                    >
                       {{ card.priority }}
                     </span>
                   </div>
 
-                  <p v-if="card.description" class="mt-1 text-xs text-gray-500 line-clamp-2 dark:text-gray-400">
+                  <p
+                    v-if="card.description"
+                    class="mt-1 line-clamp-2 text-xs text-gray-500 dark:text-gray-400"
+                  >
                     {{ card.description }}
                   </p>
 
                   <!-- Card metadata -->
                   <div class="mt-2 flex flex-wrap items-center gap-2">
-                    <span v-if="card.assigneeId"
-                      class="flex h-5 w-5 items-center justify-center rounded-full bg-primary/10 text-[9px] font-medium text-primary"
-                      :title="'Assignee: ' + card.assigneeId">
+                    <span
+                      v-if="card.assigneeId"
+                      class="bg-primary/10 text-primary flex h-5 w-5 items-center justify-center rounded-full text-[9px] font-medium"
+                      :title="'Assignee: ' + card.assigneeId"
+                    >
                       {{ getAssigneeInitials(card.assigneeId) }}
                     </span>
-                    <span v-if="card.dueDate" class="text-[10px] text-muted-foreground">📅 {{ formatDate(card.dueDate) }}</span>
-                    <span v-if="card.linkedDeliveryId" class="text-[10px] text-blue-500" title="Linked to delivery">📦</span>
-                    <span v-if="card.linkedInspectionId" class="text-[10px] text-green-500" title="Linked to inspection">🔍</span>
-                    <span v-if="card.linkedBlueprintId" class="text-[10px] text-purple-500" title="Linked to blueprint">📐</span>
+                    <span v-if="card.dueDate" class="text-muted-foreground text-[10px]"
+                      >📅 {{ formatDate(card.dueDate) }}</span
+                    >
+                    <span
+                      v-if="card.linkedDeliveryId"
+                      class="text-[10px] text-blue-500"
+                      title="Linked to delivery"
+                      >📦</span
+                    >
+                    <span
+                      v-if="card.linkedInspectionId"
+                      class="text-[10px] text-green-500"
+                      title="Linked to inspection"
+                      >🔍</span
+                    >
+                    <span
+                      v-if="card.linkedBlueprintId"
+                      class="text-[10px] text-purple-500"
+                      title="Linked to blueprint"
+                      >📐</span
+                    >
                   </div>
 
-                  <div v-if="card.blockedReason" class="mt-2 rounded bg-red-50 px-2 py-1 text-[11px] text-red-600 dark:bg-red-900/20 dark:text-red-400">
+                  <div
+                    v-if="card.blockedReason"
+                    class="mt-2 rounded bg-red-50 px-2 py-1 text-[11px] text-red-600 dark:bg-red-900/20 dark:text-red-400"
+                  >
                     🚫 {{ card.blockedReason }}
                   </div>
                 </div>
               </div>
             </TransitionGroup>
 
-            <div v-if="!cardsByColumn[col.id]?.length"
-              class="flex flex-col items-center justify-center py-10 text-center">
+            <div
+              v-if="!cardsByColumn[col.id]?.length"
+              class="flex flex-col items-center justify-center py-10 text-center"
+            >
               <span class="mb-1 text-xl">{{ getEmptyState(col.id).icon }}</span>
               <p class="text-xs text-gray-400">{{ getEmptyState(col.id).text }}</p>
               <p class="mt-1 text-[10px] text-gray-300 dark:text-gray-500">Drag cards here</p>
@@ -278,10 +332,13 @@ function getEmptyState(columnId: string) {
       </div>
 
       <!-- Empty board state -->
-      <div v-else class="flex flex-col items-center justify-center rounded-lg border border-dashed border-gray-300 py-16 dark:border-gray-700">
+      <div
+        v-else
+        class="flex flex-col items-center justify-center rounded-lg border border-dashed border-gray-300 py-16 dark:border-gray-700"
+      >
         <span class="mb-2 text-3xl">📋</span>
-        <p class="text-sm font-medium text-muted-foreground">No columns configured yet</p>
-        <p class="mt-1 text-xs text-muted-foreground">Set up columns in the board settings</p>
+        <p class="text-muted-foreground text-sm font-medium">No columns configured yet</p>
+        <p class="text-muted-foreground mt-1 text-xs">Set up columns in the board settings</p>
       </div>
     </div>
   </div>
