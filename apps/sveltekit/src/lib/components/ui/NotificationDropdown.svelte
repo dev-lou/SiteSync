@@ -87,9 +87,13 @@
     ></div>
 
     <!-- Dropdown -->
+    <!-- svelte-ignore a11y_no_static_element_interactions -->
     <div
       class="absolute right-0 top-full z-50 mt-1 w-80 rounded-lg border border-border bg-background shadow-lg md:w-96"
       onclick={(e) => e.stopPropagation()}
+      onkeydown={(e) => {
+        if (e.key === 'Escape') close();
+      }}
     >
       <div class="flex items-center justify-between border-b border-border px-4 py-3">
         <h3 class="text-sm font-semibold">Notifications</h3>
